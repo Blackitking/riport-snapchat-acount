@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ڕاپۆرتی Snapchat</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  font-family:Tahoma,Arial,sans-serif;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  color:white;
+  background:
+    radial-gradient(circle at top,#173d72 0,#091529 45%,#030811 100%);
+}
+
+.container{
+  width:94%;
+  max-width:700px;
+  margin:auto;
+  padding:25px 0 40px;
+}
+
+.logo{
+  width:78px;
+  height:78px;
+  margin:10px auto;
+  border-radius:25px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#fffc00;
+  color:#111;
+  font-size:42px;
+  box-shadow:0 0 35px rgba(255,252,0,.25);
+}
+
+h1{
+  text-align:center;
+  margin:15px 0 5px;
+}
+
+.desc{
+  text-align:center;
+  color:#aebdd0;
+  line-height:1.9;
+  margin-bottom:25px;
+}
+
+.card{
+  background:rgba(12,28,49,.92);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:22px;
+  padding:22px;
+  margin-bottom:18px;
+}
+
+.title{
+  font-size:18px;
+  font-weight:bold;
+  margin-bottom:15px;
+}
+
+label{
+  display:block;
+  margin:14px 0 7px;
+  font-size:14px;
+  color:#dce7f5;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:14px;
+  border-radius:13px;
+  border:1px solid #29435f;
+  background:#071321;
+  color:white;
+  outline:none;
+  font-size:15px;
+}
+
+textarea{
+  min-height:130px;
+  resize:vertical;
+  line-height:1.8;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:#00d9ff;
+  box-shadow:0 0 0 3px rgba(0,217,255,.08);
+}
+
+.file{
+  border:1px dashed #3a5877;
+  border-radius:14px;
+  padding:14px;
+  background:#081727;
+}
+
+.file input{
+  border:0;
+  padding:5px;
+}
+
+.hint{
+  color:#8498b1;
+  font-size:12px;
+  line-height:1.8;
+  margin-top:7px;
+}
+
+button{
+  width:100%;
+  padding:16px;
+  border:0;
+  border-radius:14px;
+  cursor:pointer;
+  font-size:16px;
+  font-weight:bold;
+  margin-top:12px;
+}
+
+.primary{
+  background:#00d9ff;
+  color:#03101a;
+}
+
+.secondary{
+  background:#182c45;
+  color:white;
+  border:1px solid #2d4966;
+}
+
+.result{
+  display:none;
+  margin-top:16px;
+  padding:15px;
+  border-radius:14px;
+  line-height:1.9;
+}
+
+.success{
+  display:block;
+  background:rgba(0,200,120,.1);
+  border:1px solid rgba(0,200,120,.3);
+}
+
+.error{
+  display:block;
+  background:rgba(255,60,60,.1);
+  border:1px solid rgba(255,60,60,.3);
+}
+
+.english{
+  direction:ltr;
+  text-align:left;
+  background:#050d18;
+  border-radius:12px;
+  padding:13px;
+  margin-top:12px;
+  color:#d7e3ef;
+  white-space:pre-wrap;
+}
+
+footer{
+  text-align:center;
+  color:#71849d;
+  font-size:12px;
+  line-height:1.8;
+  padding:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="logo">👻</div>
+
+  <h1>ڕاپۆرتی Snapchat</h1>
+
+  <div class="desc">
+    ئەم فۆڕمە یارمەتیت دەدات ڕاپۆرتێکی ڕوون و بەڵگەدار ئامادە بکەیت.
+    <br>
+    زانیارییە ڕاستەکان بنووسە و تەنها بەڵگەی پەیوەندیدار زیاد بکە.
+  </div>
+
+  <div class="card">
+
+    <div class="title">👤 زانیاریی ئەکاونت</div>
+
+    <label>یوزەرنەیمی Snapchat *</label>
+
+    <input
+      id="username"
+      type="text"
+      maxlength="100"
+      placeholder="بۆ نموونە: example123"
+    >
+
+    <label>جۆری کێشە *</label>
+
+    <select id="type">
+      <option value="">جۆری کێشە هەڵبژێرە</option>
+      <option value="Harassment or bullying">هەراسانکردن یان قسەی ناشیرین</option>
+      <option value="Impersonation">خۆکردن بە کەسێکی تر</option>
+      <option value="Scam or fraud">فێڵ یان ساختەکاری</option>
+      <option value="Inappropriate content">ناوەڕۆکی نالەبار</option>
+      <option value="Threats or dangerous behavior">هەڕەشە یان هەڵسوکەوتی مەترسیدار</option>
+      <option value="Other">جۆرێکی تر</option>
+    </select>
+
+  </div>
+
+  <div class="card">
+
+    <div class="title">📝 وردەکاریی ڕاپۆرت</div>
+
+    <label>تێبینی بە کوردی *</label>
+
+    <textarea
+      id="kurdish"
+      maxlength="5000"
+      placeholder="بە وردی باس بکە کێشەکە چییە..."
+    ></textarea>
+
+    <label>دەقی ئینگلیزی بۆ Snapchat</label>
+
+    <textarea
+      id="english"
+      dir="ltr"
+      maxlength="5000"
+      placeholder="English explanation..."
+    ></textarea>
+
+    <button class="secondary" onclick="makeEnglish()">
+      🇬🇧 ئامادەکردنی دەقی ئینگلیزی
+    </button>
+
+    <p class="hint">
+      ئەمە تەنها دەقێکی ئامادەکراوی ئینگلیزی دروست دەکات؛
+      وەرگێڕانی AI نییە.
+    </p>
+
+  </div>
+
+  <div class="card">
+
+    <div class="title">📎 بەڵگە</div>
+
+    <label>🖼️ وێنە</label>
+
+    <div class="file">
+      <input
+        id="image"
+        type="file"
+        accept="image/*"
+      >
+    </div>
+
+    <label>🎥 ڤیدیۆ</label>
+
+    <div class="file">
+      <input
+        id="video"
+        type="file"
+        accept="video/*"
+      >
+    </div>
+
+    <p class="hint">
+      تێبینی: ئەم فایلانە لە ناو فۆڕمی کۆدی تۆدا تۆمار ناکرێن بۆ Snapchat؛
+      فۆڕمی فەرمی Snapchat دەبێت فایلەکانی خۆی وەربگرێت.
+    </p>
+
+  </div>
+
+  <div class="card">
+
+    <div class="title">📤 ناردنی ڕاپۆرت</div>
+
+    <p class="hint">
+      دوای کلیککردن، فۆڕمی فەرمی Snapchat دەکرێتەوە.
+      لەوێ username، description و بەڵگەکان دابنێ و
+      reCAPTCHA ـی Snapchat تەواو بکە.
+    </p>
+
+    <button class="primary" onclick="prepareReport()">
+      🚀 ئامادەکردنی ڕاپۆرت و کردنەوەی Snapchat
+    </button>
+
+    <div id="result" class="result"></div>
+
+  </div>
+
+  <footer>
+    ئەم سایتە سەربەخۆی Snapchat نییە.
+    <br>
+    ڕاپۆرتەکان تەنها بۆ کێشە ڕاستەقینە و بەڵگەدار بەکاربهێنە.
+  </footer>
+
+</div>
+
+
+<script>
+
+const SNAPCHAT_FORM =
+"https://help.snapchat.com/hc/en-us/requests/new?co=true&ticket_form_id=17470990658068";
+
+
+function getData(){
+
+  return {
+    username:
+      document.getElementById("username").value.trim(),
+
+    type:
+      document.getElementById("type").value,
+
+    kurdish:
+      document.getElementById("kurdish").value.trim(),
+
+    english:
+      document.getElementById("english").value.trim(),
+
+    image:
+      document.getElementById("image").files[0],
+
+    video:
+      document.getElementById("video").files[0]
+  };
+
+}
+
+
+function show(message,type){
+
+  const box =
+    document.getElementById("result");
+
+  box.className =
+    "result " + type;
+
+  box.innerHTML =
+    message;
+}
+
+
+function makeEnglish(){
+
+  const data = getData();
+
+  if(!data.username){
+
+    show(
+      "❌ تکایە یوزەرنەیم بنووسە.",
+      "error"
+    );
+
+    return;
+  }
+
+  if(!data.kurdish){
+
+    show(
+      "❌ تکایە تێبینیی کوردی بنووسە.",
+      "error"
+    );
+
+    return;
+  }
+
+  const english = `
+I would like to report the Snapchat account: ${data.username}
+
+Report category:
+${data.type || "Other"}
+
+Details:
+${data.kurdish}
+
+Please review this report and the attached evidence according to Snapchat's policies and Community Guidelines.
+
+Thank you.
+`.trim();
+
+  document.getElementById("english").value =
+    english;
+
+  show(
+    `
+    <strong>✅ دەقی ئینگلیزی ئامادە کرا.</strong>
+    <div class="english">${escapeHTML(english)}</div>
+    `,
+    "success"
+  );
+}
+
+
+function escapeHTML(text){
+
+  return text
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+function prepareReport(){
+
+  const data = getData();
+
+  if(!data.username){
+
+    show(
+      "❌ تکایە یوزەرنەیمی Snapchat بنووسە.",
+      "error"
+    );
+
+    return;
+  }
+
+  if(!data.type){
+
+    show(
+      "❌ تکایە جۆری کێشە هەڵبژێرە.",
+      "error"
+    );
+
+    return;
+  }
+
+  if(!data.kurdish){
+
+    show(
+      "❌ تکایە تێبینیی ڕاپۆرت بنووسە.",
+      "error"
+    );
+
+    return;
+  }
+
+  if(!data.english){
+
+    makeEnglish();
+
+    setTimeout(() => {
+
+      window.open(
+        SNAPCHAT_FORM,
+        "_blank"
+      );
+
+    },300);
+
+    return;
+  }
+
+  window.open(
+    SNAPCHAT_FORM,
+    "_blank"
+  );
+
+}
+
+
+</script>
+
+</body>
+  </html>
