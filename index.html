@@ -1,8 +1,11 @@
+باشە. ئەمجارە کۆدەکە بە شێوەیەک دەنووسم کە مەبەست هەڵبژێریت → شوێنی ئێستات وەربگرێت → ڕێگای ڕاستەقینەی شەقامەکان بکێشێت → هەنگاوی ڕێگا نیشان بدات.
+کۆدی پێشووت بە تەواوی بسڕەوە و ئەمە جێگای بکەرەوە:
+Writing
 <!DOCTYPE html>
 <html lang="ku" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>XOSHNAW MAP</title>
 
@@ -10,171 +13,173 @@
 href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
-
 *{
-box-sizing:border-box;
-margin:0;
-padding:0;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html,body,#map{
+  width:100%;
+  height:100%;
 }
 
 body{
-font-family:Arial,sans-serif;
-background:#eef2f5;
-overflow:hidden;
+  font-family:Arial,sans-serif;
+  overflow:hidden;
+  background:#eef2f5;
 }
 
 #map{
-width:100%;
-height:100vh;
+  position:absolute;
+  inset:0;
 }
 
-/* SEARCH */
+/* Search */
 
-.search-box{
-position:fixed;
-top:14px;
-left:50%;
-transform:translateX(-50%);
-width:94%;
-max-width:520px;
-z-index:1000;
-background:white;
-border-radius:17px;
-box-shadow:0 4px 20px rgba(0,0,0,.22);
-display:flex;
-padding:5px;
+.search{
+  position:fixed;
+  z-index:1000;
+  top:15px;
+  left:50%;
+  transform:translateX(-50%);
+  width:94%;
+  max-width:520px;
+  background:#fff;
+  padding:5px;
+  border-radius:17px;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
+  display:flex;
+  gap:5px;
 }
 
-.search-box input{
-flex:1;
-border:0;
-outline:none;
-font-size:16px;
-padding:13px;
-direction:rtl;
+.search input{
+  min-width:0;
+  flex:1;
+  border:0;
+  outline:0;
+  padding:13px;
+  font-size:16px;
+  direction:rtl;
 }
 
-.search-box button{
-border:0;
-background:#1769ff;
-color:white;
-padding:12px 16px;
-border-radius:13px;
-font-size:15px;
+.search button{
+  border:0;
+  border-radius:13px;
+  background:#1769ff;
+  color:white;
+  padding:0 17px;
+  font-size:15px;
+  font-weight:bold;
 }
 
-/* CONTROLS */
+/* GPS */
 
-.controls{
-position:fixed;
-left:14px;
-bottom:170px;
-z-index:1000;
-display:flex;
-flex-direction:column;
-gap:9px;
+.buttons{
+  position:fixed;
+  z-index:1000;
+  left:14px;
+  bottom:175px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
 }
 
-.control{
-width:52px;
-height:52px;
-border:0;
-border-radius:50%;
-background:white;
-box-shadow:0 4px 15px rgba(0,0,0,.22);
-font-size:22px;
+.buttons button{
+  width:52px;
+  height:52px;
+  border:0;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 4px 15px rgba(0,0,0,.25);
+  font-size:22px;
 }
 
-/* ROUTE PANEL */
+/* Bottom */
 
-.route-panel{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-z-index:1000;
-background:white;
-border-radius:25px 25px 0 0;
-box-shadow:0 -5px 25px rgba(0,0,0,.2);
-padding:16px;
+.panel{
+  position:fixed;
+  z-index:1000;
+  left:0;
+  right:0;
+  bottom:0;
+  background:white;
+  border-radius:25px 25px 0 0;
+  box-shadow:0 -5px 25px rgba(0,0,0,.22);
+  padding:14px;
 }
 
-.title{
-font-size:21px;
-font-weight:bold;
-text-align:center;
-color:#1769ff;
-margin-bottom:8px;
+.logo{
+  text-align:center;
+  color:#1769ff;
+  font-size:21px;
+  font-weight:bold;
+  margin-bottom:7px;
 }
 
 .status{
-text-align:center;
-font-size:14px;
-color:#555;
-margin-bottom:10px;
-}
-
-.info{
-display:flex;
-justify-content:space-around;
-background:#f4f6f8;
-border-radius:15px;
-padding:10px;
-margin-bottom:10px;
-}
-
-.info div{
-text-align:center;
-font-size:13px;
-}
-
-.info strong{
-display:block;
-font-size:17px;
-color:#111;
-margin-top:4px;
-}
-
-.route-btn{
-width:100%;
-border:0;
-background:#1769ff;
-color:white;
-padding:14px;
-border-radius:14px;
-font-size:17px;
-font-weight:bold;
-}
-
-.voice-btn{
-width:100%;
-border:0;
-background:#222;
-color:white;
-padding:12px;
-border-radius:14px;
-font-size:15px;
-margin-top:8px;
+  text-align:center;
+  color:#555;
+  font-size:14px;
+  margin-bottom:9px;
 }
 
 .instruction{
-display:none;
-background:#1769ff;
-color:white;
-border-radius:17px;
-padding:13px;
-margin-bottom:10px;
-text-align:center;
-font-size:17px;
-font-weight:bold;
+  display:none;
+  background:#1769ff;
+  color:white;
+  border-radius:16px;
+  padding:12px;
+  text-align:center;
+  margin-bottom:9px;
 }
 
-.instruction .distance{
-font-size:27px;
-display:block;
-margin-bottom:3px;
+.instruction b{
+  display:block;
+  font-size:26px;
 }
 
+.info{
+  display:flex;
+  justify-content:space-around;
+  background:#f3f5f7;
+  border-radius:15px;
+  padding:10px 5px;
+  margin-bottom:9px;
+}
+
+.info div{
+  text-align:center;
+  font-size:13px;
+}
+
+.info strong{
+  display:block;
+  font-size:17px;
+  margin-top:3px;
+}
+
+.mainbtn{
+  width:100%;
+  border:0;
+  border-radius:14px;
+  padding:14px;
+  background:#1769ff;
+  color:white;
+  font-size:17px;
+  font-weight:bold;
+}
+
+.voice{
+  width:100%;
+  border:0;
+  border-radius:14px;
+  padding:11px;
+  margin-top:7px;
+  background:#222;
+  color:#fff;
+  font-size:15px;
+}
 </style>
 </head>
 
@@ -182,85 +187,80 @@ margin-bottom:3px;
 
 <div id="map"></div>
 
-<!-- SEARCH -->
+<!-- Search destination -->
 
-<div class="search-box">
+<div class="search">
 
 <input
 id="destination"
-type="text"
 placeholder="ناوی شار یان شوێن بنووسە..."
->
+autocomplete="off">
 
 <button onclick="searchDestination()">
-گەڕان
+ڕێگا
 </button>
 
 </div>
 
-<!-- BUTTONS -->
+<!-- Map buttons -->
 
-<div class="controls">
+<div class="buttons">
 
-<button class="control" onclick="locateUser()">
+<button onclick="getLocation()">
 📍
 </button>
 
-<button class="control" onclick="map.zoomIn()">
+<button onclick="map.zoomIn()">
 ＋
 </button>
 
-<button class="control" onclick="map.zoomOut()">
+<button onclick="map.zoomOut()">
 −
 </button>
 
 </div>
 
-<!-- PANEL -->
+<!-- Navigation panel -->
 
-<div class="route-panel">
+<div class="panel">
 
-<div class="title">
+<div class="logo">
 XOSHNAW MAP
 </div>
 
 <div id="instruction" class="instruction">
-<span id="instructionDistance" class="distance"></span>
+<b id="instructionDistance"></b>
 <span id="instructionText"></span>
 </div>
 
 <div id="status" class="status">
-شوێنی مەبەست بنووسە
+سەرەتا شوێنی مەبەست بنووسە.
 </div>
 
 <div class="info">
 
 <div>
-دووری
+دووری ماوە
 <strong id="distance">—</strong>
 </div>
 
 <div>
-کات
+کاتی گەیشتن
 <strong id="duration">—</strong>
 </div>
 
 <div>
-دۆخ
-<strong id="gpsStatus">ئامادە</strong>
+GPS
+<strong id="gps">OFF</strong>
 </div>
 
 </div>
 
-<button
-class="route-btn"
-onclick="locateUser()">
+<button class="mainbtn" onclick="getLocation()">
 📍 شوێنی من بدۆزەوە
 </button>
 
-<button
-class="voice-btn"
-onclick="testVoice()">
+<button class="voice" onclick="testVoice()">
 🔊 تاقیکردنەوەی دەنگ
 </button>
 
@@ -270,11 +270,12 @@ onclick="testVoice()">
 
 <script>
 
-/* =========================
+/* ==================================
    MAP
-========================= */
+================================== */
 
-const map = L.map("map").setView(
+const map =
+L.map("map").setView(
 [36.1911,44.0092],
 13
 );
@@ -288,908 +289,920 @@ attribution:"© OpenStreetMap contributors"
 ).addTo(map);
 
 
-/* =========================
+/* ==================================
    VARIABLES
-========================= */
+================================== */
 
 let userMarker = null;
 let destinationMarker = null;
-let routeLine = null;
+let routeLayer = null;
 
-let userPosition = null;
-let destinationPosition = null;
+let userLat = null;
+let userLng = null;
 
-let routeSteps = [];
-let lastInstruction = -1;
+let destinationLat = null;
+let destinationLng = null;
 
-let tracking = false;
+let steps = [];
+let lastStep = -1;
+
+let watchID = null;
 
 
-/* =========================
-   STATUS
-========================= */
+/* ==================================
+   HELPERS
+================================== */
 
-function setStatus(text){
-document.getElementById("status").innerText=text;
+function status(text){
+  document.getElementById("status").innerText=text;
 }
 
 
-/* =========================
-   USER LOCATION
-========================= */
+/* ==================================
+   GET LOCATION
+================================== */
 
-function locateUser(){
+function getLocation(){
 
-if(!navigator.geolocation){
+  if(!navigator.geolocation){
 
-setStatus(
-"ئەم ئامێرە GPS پشتگیری ناکات."
-);
+    status(
+      "GPS لە ئەم وێبگەڕەدا بەردەست نییە."
+    );
 
-return;
-}
+    return;
+  }
 
-setStatus(
-"لە دۆزینەوەی شوێنی تۆدایە..."
-);
+  status(
+    "لە وەرگرتنی شوێنی تۆدایە..."
+  );
 
-navigator.geolocation.getCurrentPosition(
+  navigator.geolocation.getCurrentPosition(
 
-function(position){
+    function(position){
 
-updateUserPosition(position);
+      updateLocation(position);
 
-startTracking();
+      document.getElementById("gps")
+        .innerText="ON";
 
-},
+      startWatching();
 
-function(){
+      /*
+       * ئەگەر مەبەست هەیە،
+       * دوای وەرگرتنی GPS ڕێگا دروست بکە.
+       */
 
-setStatus(
-"تکایە مۆڵەتی Location بدە."
-);
+      if(
+        destinationLat !== null &&
+        destinationLng !== null
+      ){
 
-},
+        createRoute();
 
-{
-enableHighAccuracy:true,
-timeout:15000,
-maximumAge:0
-}
+      }
 
-);
+    },
 
-}
+    function(error){
 
+      document.getElementById("gps")
+        .innerText="ERROR";
 
-/* =========================
-   UPDATE POSITION
-========================= */
+      if(error.code === 1){
 
-function updateUserPosition(position){
+        status(
+          "مۆڵەتی Location ڕەتکراوەتەوە. تکایە Allow بکە."
+        );
 
-const lat =
-position.coords.latitude;
+      }else{
 
-const lng =
-position.coords.longitude;
+        status(
+          "نەتوانرا شوێنی GPS وەربگیرێت."
+        );
 
-userPosition = [lat,lng];
+      }
 
-document.getElementById(
-"gpsStatus"
-).innerText="GPS ✓";
+    },
 
+    {
+      enableHighAccuracy:true,
+      timeout:15000,
+      maximumAge:0
+    }
 
-if(userMarker){
-
-userMarker.setLatLng(
-[lat,lng]
-);
-
-}else{
-
-userMarker =
-L.marker([lat,lng])
-.addTo(map)
-.bindPopup("📍 شوێنی تۆ");
-
-}
-
-if(!destinationPosition){
-
-map.setView(
-[lat,lng],
-16
-);
-
-}
-
-if(destinationPosition){
-
-updateNavigation();
-
-}
+  );
 
 }
 
 
-/* =========================
+/* ==================================
+   UPDATE LOCATION
+================================== */
+
+function updateLocation(position){
+
+  userLat =
+    position.coords.latitude;
+
+  userLng =
+    position.coords.longitude;
+
+
+  if(!userMarker){
+
+    userMarker =
+      L.marker(
+        [userLat,userLng]
+      )
+      .addTo(map)
+      .bindPopup("📍 شوێنی تۆ");
+
+  }else{
+
+    userMarker.setLatLng(
+      [userLat,userLng]
+    );
+
+  }
+
+
+  /*
+   * ئەگەر ڕێگا هەیە،
+   * ڕێنمایی نوێ بکە.
+   */
+
+  if(steps.length){
+
+    updateNavigation();
+
+  }
+
+}
+
+
+/* ==================================
    LIVE GPS
-========================= */
+================================== */
 
-function startTracking(){
+function startWatching(){
 
-if(tracking) return;
+  if(watchID !== null){
+    return;
+  }
 
-tracking=true;
+  watchID =
+    navigator.geolocation.watchPosition(
 
-navigator.geolocation.watchPosition(
+      function(position){
 
-function(position){
+        updateLocation(position);
 
-updateUserPosition(position);
+      },
 
-},
+      function(){
 
-function(){
+        document.getElementById("gps")
+          .innerText="ERROR";
 
-document.getElementById(
-"gpsStatus"
-).innerText="GPS هەڵەیە";
+      },
 
-},
+      {
+        enableHighAccuracy:true,
+        maximumAge:1000,
+        timeout:10000
+      }
 
-{
-enableHighAccuracy:true,
-maximumAge:1000,
-timeout:10000
+    );
+
 }
 
-);
 
-}
-
-
-/* =========================
+/* ==================================
    SEARCH DESTINATION
-========================= */
+================================== */
 
 async function searchDestination(){
 
-const input =
-document.getElementById(
-"destination"
-);
+  const input =
+    document.getElementById(
+      "destination"
+    );
 
-const query =
-input.value.trim();
-
-if(!query){
-
-setStatus(
-"تکایە ناوی شار یان شوێن بنووسە."
-);
-
-return;
-}
-
-setStatus(
-"لە گەڕان بەدوای شوێنەکەدایە..."
-);
-
-try{
-
-const url =
-"https://nominatim.openstreetmap.org/search" +
-"?format=json" +
-"&limit=1" +
-"&q=" +
-encodeURIComponent(query);
-
-const response =
-await fetch(
-url,
-{
-headers:{
-"Accept-Language":"ku,en"
-}
-}
-);
-
-const data =
-await response.json();
-
-if(!data.length){
-
-setStatus(
-"شوێنەکە نەدۆزرایەوە."
-);
-
-return;
-}
-
-const place=data[0];
-
-const lat=
-parseFloat(place.lat);
-
-const lng=
-parseFloat(place.lon);
-
-destinationPosition=[
-lat,
-lng
-];
-
-if(destinationMarker){
-
-destinationMarker.setLatLng(
-[lat,lng]
-);
-
-}else{
-
-destinationMarker=
-L.marker([lat,lng])
-.addTo(map)
-.bindPopup(
-"🎯 مەبەست"
-)
-.openPopup();
-
-}
-
-map.setView(
-[lat,lng],
-14
-);
-
-setStatus(
-"مەبەست دۆزرایەوە."
-);
-
-if(!userPosition){
-
-setStatus(
-"ئێستا 📍 شوێنی من بدۆزەوە بۆ دروستکردنی ڕێگا."
-);
-
-return;
-}
-
-await buildRoute();
-
-}
-catch(error){
-
-console.log(error);
-
-setStatus(
-"کێشەیەک لە گەڕان ڕوویدا."
-);
-
-}
-
-}
+  const query =
+    input.value.trim();
 
 
-/* =========================
-   BUILD ROUTE
-========================= */
+  if(!query){
 
-async function buildRoute(){
+    status(
+      "ناوی شار یان شوێن بنووسە."
+    );
 
-if(
-!userPosition ||
-!destinationPosition
-){
-return;
-}
-
-setStatus(
-"ڕێگاکە لە هەژمارکردندایە..."
-);
-
-const start =
-userPosition[1]+","+
-userPosition[0];
-
-const end =
-destinationPosition[1]+","+
-destinationPosition[0];
-
-const url =
-"https://router.project-osrm.org/route/v1/driving/" +
-start + ";" + end +
-"?overview=full" +
-"&geometries=geojson" +
-"&steps=true";
-
-try{
-
-const response =
-await fetch(url);
-
-const data =
-await response.json();
-
-if(
-data.code !== "Ok" ||
-!data.routes.length
-){
-
-setStatus(
-"هیچ ڕێگایەک نەدۆزرایەوە."
-);
-
-return;
-}
-
-const route =
-data.routes[0];
+    return;
+  }
 
 
-/* REMOVE OLD ROUTE */
+  status(
+    "شوێنەکە دەدۆزرێتەوە..."
+  );
 
-if(routeLine){
 
-map.removeLayer(routeLine);
+  try{
+
+    const url =
+      "https://nominatim.openstreetmap.org/search" +
+      "?format=json" +
+      "&limit=1" +
+      "&q=" +
+      encodeURIComponent(query);
+
+
+    const response =
+      await fetch(
+        url,
+        {
+          headers:{
+            "Accept-Language":
+              "ku,en"
+          }
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if(!data.length){
+
+      status(
+        "شوێنەکە نەدۆزرایەوە."
+      );
+
+      return;
+    }
+
+
+    const place=data[0];
+
+
+    destinationLat =
+      parseFloat(place.lat);
+
+    destinationLng =
+      parseFloat(place.lon);
+
+
+    /*
+     * Marker
+     */
+
+    if(destinationMarker){
+
+      destinationMarker.setLatLng(
+        [
+          destinationLat,
+          destinationLng
+        ]
+      );
+
+    }else{
+
+      destinationMarker =
+        L.marker(
+          [
+            destinationLat,
+            destinationLng
+          ]
+        )
+        .addTo(map)
+        .bindPopup(
+          "🎯 مەبەست"
+        );
+
+    }
+
+
+    destinationMarker.openPopup();
+
+
+    /*
+     * ئەگەر GPS نییە،
+     * داوای GPS بکە.
+     */
+
+    if(
+      userLat === null ||
+      userLng === null
+    ){
+
+      status(
+        "ئێستا 📍 شوێنی من دابگرە بۆ دروستکردنی ڕێگا."
+      );
+
+      getLocation();
+
+      return;
+    }
+
+
+    createRoute();
+
+  }
+  catch(error){
+
+    console.error(error);
+
+    status(
+      "هەڵەیەک لە گەڕانی شوێن ڕوویدا."
+    );
+
+  }
 
 }
 
 
-/* DRAW ROUTE */
+/* ==================================
+   CREATE ROUTE
+================================== */
 
-routeLine =
-L.geoJSON(
-route.geometry,
-{
-style:{
-color:"#1769ff",
-weight:7,
-opacity:.85
+async function createRoute(){
+
+  if(
+    userLat === null ||
+    userLng === null ||
+    destinationLat === null ||
+    destinationLng === null
+  ){
+
+    return;
+  }
+
+
+  status(
+    "ڕێگای ئۆتۆمبێل هەژمار دەکرێت..."
+  );
+
+
+  /*
+   * IMPORTANT:
+   * OSRM:
+   * longitude,latitude
+   */
+
+  const start =
+    userLng + "," + userLat;
+
+  const end =
+    destinationLng + "," +
+    destinationLat;
+
+
+  const url =
+    "https://router.project-osrm.org/route/v1/driving/" +
+    start +
+    ";" +
+    end +
+    "?overview=full" +
+    "&geometries=geojson" +
+    "&steps=true";
+
+
+  try{
+
+    const response =
+      await fetch(url);
+
+
+    const data =
+      await response.json();
+
+
+    if(
+      data.code !== "Ok" ||
+      !data.routes ||
+      !data.routes.length
+    ){
+
+      status(
+        "ڕێگای ئۆتۆمبێل نەدۆزرایەوە."
+      );
+
+      return;
+    }
+
+
+    const route =
+      data.routes[0];
+
+
+    /*
+     * REMOVE OLD ROUTE
+     */
+
+    if(routeLayer){
+
+      map.removeLayer(
+        routeLayer
+      );
+
+    }
+
+
+    /*
+     * DRAW REAL ROAD ROUTE
+     */
+
+    routeLayer =
+      L.geoJSON(
+        route.geometry,
+        {
+          style:{
+            color:"#1769ff",
+            weight:7,
+            opacity:.9
+          }
+        }
+      ).addTo(map);
+
+
+    /*
+     * FIT MAP TO ROUTE
+     */
+
+    map.fitBounds(
+      routeLayer.getBounds(),
+      {
+        padding:[25,160]
+      }
+    );
+
+
+    /*
+     * DISTANCE
+     */
+
+    const km =
+      route.distance / 1000;
+
+
+    document.getElementById(
+      "distance"
+    ).innerText =
+      km.toFixed(1) + " km";
+
+
+    /*
+     * TIME
+     */
+
+    const minutes =
+      Math.round(
+        route.duration / 60
+      );
+
+
+    document.getElementById(
+      "duration"
+    ).innerText =
+      minutes + " خولەک";
+
+
+    /*
+     * STEPS
+     */
+
+    steps =
+      route.legs[0].steps.map(
+        step => ({
+
+          distance:
+            step.distance,
+
+          duration:
+            step.duration,
+
+          type:
+            step.maneuver.type,
+
+          modifier:
+            step.maneuver.modifier || "",
+
+          location:[
+            step.maneuver.location[1],
+            step.maneuver.location[0]
+          ]
+
+        })
+      );
+
+
+    lastStep=-1;
+
+
+    status(
+      "ڕێگا ئامادەیە 🚗"
+    );
+
+
+    updateNavigation();
+
+
+  }
+  catch(error){
+
+    console.error(error);
+
+    status(
+      "هەڵەیەک لە دروستکردنی ڕێگا ڕوویدا."
+    );
+
+  }
+
 }
-}
-).addTo(map);
 
 
-/* FIT */
-
-map.fitBounds(
-routeLine.getBounds(),
-{
-padding:[30,120]
-}
-);
-
-
-/* INFO */
-
-const km =
-route.distance / 1000;
-
-const minutes =
-Math.round(
-route.duration / 60
-);
-
-document.getElementById(
-"distance"
-).innerText =
-km.toFixed(1)+" km";
-
-document.getElementById(
-"duration"
-).innerText =
-minutes+" خولەک";
-
-setStatus(
-"ڕێگا ئامادەیە 🚗"
-);
-
-
-/* STEPS */
-
-routeSteps=[];
-
-for(
-const step of route.legs[0].steps
-){
-
-routeSteps.push({
-
-distance:step.distance,
-
-duration:step.duration,
-
-type:step.maneuver.type,
-
-modifier:step.maneuver.modifier,
-
-location:[
-step.maneuver.location[1],
-step.maneuver.location[0]
-]
-
-});
-
-}
-
-lastInstruction=-1;
-
-updateNavigation();
-
-}
-catch(error){
-
-console.log(error);
-
-setStatus(
-"کێشەیەک لە دروستکردنی ڕێگا ڕوویدا."
-);
-
-}
-
-}
-
-
-/* =========================
-   DISTANCE BETWEEN GPS
-========================= */
+/* ==================================
+   DISTANCE
+================================== */
 
 function distanceMeters(a,b){
 
-const R=6371000;
+  const R=6371000;
 
-const lat1=
-a[0]*Math.PI/180;
+  const lat1 =
+    a[0] *
+    Math.PI /
+    180;
 
-const lat2=
-b[0]*Math.PI/180;
+  const lat2 =
+    b[0] *
+    Math.PI /
+    180;
 
-const dLat=
-(b[0]-a[0])*
-Math.PI/180;
+  const dLat =
+    (b[0]-a[0]) *
+    Math.PI /
+    180;
 
-const dLng=
-(b[1]-a[1])*
-Math.PI/180;
+  const dLng =
+    (b[1]-a[1]) *
+    Math.PI /
+    180;
 
-const x=
-Math.sin(dLat/2)*
-Math.sin(dLat/2)+
-Math.cos(lat1)*
-Math.cos(lat2)*
-Math.sin(dLng/2)*
-Math.sin(dLng/2);
 
-return R*
-2*
-Math.atan2(
-Math.sqrt(x),
-Math.sqrt(1-x)
-);
+  const x =
+    Math.sin(dLat/2) *
+    Math.sin(dLat/2) +
+
+    Math.cos(lat1) *
+    Math.cos(lat2) *
+
+    Math.sin(dLng/2) *
+    Math.sin(dLng/2);
+
+
+  return R *
+    2 *
+    Math.atan2(
+      Math.sqrt(x),
+      Math.sqrt(1-x)
+    );
 
 }
 
 
-/* =========================
+/* ==================================
    NAVIGATION
-========================= */
+================================== */
 
 function updateNavigation(){
 
-if(
-!userPosition ||
-!routeSteps.length
-){
-return;
-}
+  if(
+    !steps.length ||
+    userLat === null
+  ){
 
-let nearestIndex=-1;
-
-let nearestDistance=
-Infinity;
+    return;
+  }
 
 
-/* FIND NEXT STEP */
-
-for(
-let i=0;
-i<routeSteps.length;
-i++
-){
-
-const step=
-routeSteps[i];
-
-const d=
-distanceMeters(
-userPosition,
-step.location
-);
-
-if(
-d<nearestDistance
-){
-
-nearestDistance=d;
-nearestIndex=i;
-
-}
-
-}
+  const current =
+    [userLat,userLng];
 
 
-/* CURRENT / NEXT */
+  /*
+   * Find closest upcoming step
+   */
 
-let index=nearestIndex;
-
-if(index<0)return;
-
-const step=
-routeSteps[index];
-
-let meters=
-Math.round(
-nearestDistance
-);
-
-if(
-meters<5 &&
-index<routeSteps.length-1
-){
-
-index++;
-
-}
-
-const nextStep=
-routeSteps[index];
-
-meters=
-Math.round(
-distanceMeters(
-userPosition,
-nextStep.location
-)
-);
+  let bestIndex=0;
+  let bestDistance=Infinity;
 
 
-/* ARRIVED */
+  for(
+    let i=0;
+    i<steps.length;
+    i++
+  ){
 
-if(
-index>=routeSteps.length-1 &&
-meters<40
-){
-
-showInstruction(
-"گەیشتیتە مەبەستەکەت 🎯",
-"",
-false
-);
-
-speak(
-"گەیشتیتە مەبەستەکەت"
-);
-
-return;
-
-}
+    const d =
+      distanceMeters(
+        current,
+        steps[i].location
+      );
 
 
-/* SPEECH THRESHOLD */
+    if(d<bestDistance){
 
-let threshold=50;
+      bestDistance=d;
+      bestIndex=i;
 
-if(meters<=threshold){
+    }
 
-if(
-lastInstruction!==index
-){
+  }
 
-lastInstruction=index;
 
-const text=
-makeInstruction(
-nextStep
-);
+  /*
+   * Don't repeat old steps
+   */
 
-showInstruction(
-"لە "+meters+" مەتر",
-text,
-true
-);
+  if(
+    bestIndex < lastStep
+  ){
 
-speak(
-makeSpeech(
-meters,
-nextStep
-)
-);
+    bestIndex=lastStep;
 
-}
+  }
 
-}else{
 
-showInstruction(
-"ئامادە بە",
-makeInstruction(nextStep),
-true
-);
+  const step =
+    steps[bestIndex];
 
-}
+
+  const meters =
+    Math.max(
+      1,
+      Math.round(
+        distanceMeters(
+          current,
+          step.location
+        )
+      )
+    );
+
+
+  /*
+   * ARRIVED
+   */
+
+  if(
+    bestIndex >= steps.length-1 &&
+    meters < 40
+  ){
+
+    showInstruction(
+      "🎯",
+      "گەیشتیتە مەبەستەکەت"
+    );
+
+
+    speak(
+      "گەیشتیتە مەبەستەکەت"
+    );
+
+
+    return;
+  }
+
+
+  /*
+   * Show instruction
+   */
+
+  const text =
+    instructionText(step);
+
+
+  showInstruction(
+    meters + " مەتر",
+    text
+  );
+
+
+  /*
+   * Voice at 50m
+   */
+
+  if(
+    meters <= 50 &&
+    lastStep !== bestIndex
+  ){
+
+    lastStep=bestIndex;
+
+    speak(
+      meters +
+      " مەتری تر، " +
+      text
+    );
+
+  }
 
 }
 
 
-/* =========================
+/* ==================================
    KURDISH INSTRUCTION
-========================= */
+================================== */
 
-function makeInstruction(step){
+function instructionText(step){
 
-const type=
-step.type;
+  const type =
+    step.type;
 
-const modifier=
-step.modifier || "";
-
-
-if(
-modifier.includes("right")
-){
-
-return "بە دەستی ڕاست بسوڕێوە";
-
-}
-
-if(
-modifier.includes("left")
-){
-
-return "بە دەستی چەپ بسوڕێوە";
-
-}
-
-if(
-type==="uturn"
-){
-
-return "بسوڕێوە و بگەڕێوە";
-
-}
-
-if(
-type==="roundabout"
-){
-
-return "بچۆ ناو گەڕانەوەکە";
-
-}
-
-if(
-type==="arrive"
-){
-
-return "گەیشتیتە مەبەستەکەت";
-
-}
-
-return "بەردەوام بە ڕاستەوخۆ";
-
-}
+  const modifier =
+    step.modifier;
 
 
-/* =========================
-   SPEECH TEXT
-========================= */
+  if(type === "arrive"){
 
-function makeSpeech(
-meters,
-step
-){
+    return "گەیشتیتە مەبەستەکەت";
 
-let instruction=
-makeInstruction(step);
+  }
 
-if(
-instruction.includes("ڕاست")
-){
 
-return (
-meters+
-" مەتری تر، " +
-"بە دەستی ڕاست بسوڕێوە"
-);
+  if(
+    modifier.includes("right")
+  ){
 
-}
+    return "بە دەستی ڕاست بسوڕێوە";
 
-if(
-instruction.includes("چەپ")
-){
+  }
 
-return (
-meters+
-" مەتری تر، " +
-"بە دەستی چەپ بسوڕێوە"
-);
 
-}
+  if(
+    modifier.includes("left")
+  ){
 
-return (
-meters+
-" مەتری تر، " +
-instruction
-);
+    return "بە دەستی چەپ بسوڕێوە";
+
+  }
+
+
+  if(
+    modifier.includes("uturn") ||
+    type === "uturn"
+  ){
+
+    return "بسوڕێوە و بگەڕێوە";
+
+  }
+
+
+  if(
+    type === "roundabout"
+  ){
+
+    return "بچۆ ناو گەڕانەوەکە";
+
+  }
+
+
+  return "بەردەوام بە ڕاستەوخۆ";
 
 }
 
 
-/* =========================
-   SHOW INSTRUCTION
-========================= */
-
-function showInstruction(
-distance,
-text,
-show
-){
-
-const box=
-document.getElementById(
-"instruction"
-);
-
-if(!show){
-
-box.style.display="block";
-
-document.getElementById(
-"instructionDistance"
-).innerText="🎯";
-
-document.getElementById(
-"instructionText"
-).innerText=text;
-
-return;
-}
-
-box.style.display="block";
-
-document.getElementById(
-"instructionDistance"
-).innerText=
-distance;
-
-document.getElementById(
-"instructionText"
-).innerText=
-text;
-
-}
-
-
-/* =========================
-   KURDISH VOICE
-========================= */
+/* ==================================
+   VOICE
+================================== */
 
 function speak(text){
 
-if(
-typeof speechSynthesis ===
-"undefined"
+  if(
+    !("speechSynthesis" in window)
+  ){
+
+    return;
+  }
+
+
+  speechSynthesis.cancel();
+
+
+  const utterance =
+    new SpeechSynthesisUtterance(
+      text
+    );
+
+
+  utterance.lang="ku";
+  utterance.rate=.9;
+  utterance.pitch=1;
+  utterance.volume=1;
+
+
+  const voices =
+    speechSynthesis.getVoices();
+
+
+  const kurdish =
+    voices.find(
+      v =>
+        v.lang
+        .toLowerCase()
+        .startsWith("ku")
+    );
+
+
+  if(kurdish){
+
+    utterance.voice=
+      kurdish;
+
+  }
+
+
+  speechSynthesis.speak(
+    utterance
+  );
+
+}
+
+
+/* ==================================
+   SHOW INSTRUCTION
+================================== */
+
+function showInstruction(
+  distance,
+  text
 ){
 
-return;
-}
-
-speechSynthesis.cancel();
-
-const voice=
-new SpeechSynthesisUtterance(
-text
-);
-
-voice.lang="ku";
-
-voice.rate=0.9;
-
-voice.pitch=1;
-
-voice.volume=1;
+  const box =
+    document.getElementById(
+      "instruction"
+    );
 
 
-/*
-Try Kurdish voice first,
-then Arabic/English fallback
-*/
+  box.style.display="block";
 
-const voices=
-speechSynthesis.getVoices();
 
-const kurdish=
-voices.find(
-v =>
-v.lang.toLowerCase()
-.startsWith("ku")
-);
+  document.getElementById(
+    "instructionDistance"
+  ).innerText =
+    distance;
 
-const arabic=
-voices.find(
-v =>
-v.lang.toLowerCase()
-.startsWith("ar")
-);
 
-if(kurdish){
-
-voice.voice=kurdish;
-
-}
-else if(arabic){
-
-voice.voice=arabic;
-
-}
-
-speechSynthesis.speak(
-voice
-);
+  document.getElementById(
+    "instructionText"
+  ).innerText =
+    text;
 
 }
 
 
-/* =========================
+/* ==================================
    TEST VOICE
-========================= */
+================================== */
 
 function testVoice(){
 
-speak(
-"پەیامی تاقیکردنەوەی XOSHNAW MAP. پەنجا مەتری تر، بە دەستی ڕاست بسوڕێوە."
-);
+  speak(
+    "پەنجا مەتری تر، بە دەستی ڕاست بسوڕێوە."
+  );
 
 }
 
 
-/* =========================
-   ENTER SEARCH
-========================= */
+/* ==================================
+   ENTER
+================================== */
 
 document
 .getElementById("destination")
 .addEventListener(
-"keydown",
-function(e){
+  "keydown",
+  function(e){
 
-if(e.key==="Enter"){
+    if(e.key==="Enter"){
 
-searchDestination();
+      searchDestination();
 
-}
+    }
 
-});
-
-
-/* LOAD VOICES */
-
-if(
-"speechSynthesis" in window
-){
-
-speechSynthesis.onvoiceschanged=
-function(){
-
-speechSynthesis.getVoices();
-
-};
-
-}
+  }
+);
 
 </script>
 
 </body>
 </html>
+ئێستا تاقی بکەرەوە بەو ڕیزە:
+① کۆدەکە Save/Commit بکە.
+② سایتەکە بکەرەوە.
+③ 📍 شوێنی من بدۆزەوە دابگرە و Allow Location بکە.
+④ لە خانەی سەرەوە بنووسە هەولێر و ڕێگا دابگرە.
+⑤ دەبێت ڕێگای ئۆتۆمبێل لە شوێنی GPS ـی تۆوە بۆ هەولێر بە هێڵی شەقامەکان نیشان بدات.
+ئەگەر هەولێر لە شوێنی ئێستات زۆر نزیکە، شارێکی دوورتر وەک کۆیە تاقی بکەرەوە بۆ ئەوەی هێڵی ڕێگا و turn ـەکان بە ئاشکرایی ببینیت.
