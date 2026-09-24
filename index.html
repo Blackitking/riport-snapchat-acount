@@ -31,6 +31,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-family:
 .leaflet-control-zoom{margin-top:155px!important;border:0!important}
 .leaflet-control-zoom a{background:#081525!important;color:white!important;border:0!important}
 .leaflet-control-attribution{font-size:8px;background:rgba(0,0,0,.35)!important;color:#aaa!important}
+.xosh-naw-hazard-icon{background:transparent!important;border:0!important}
 .hazardMarker{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;background:rgba(7,16,29,.96);border:2px solid rgba(255,255,255,.85);box-shadow:0 4px 15px rgba(0,0,0,.45)}
 .hazardPopup{font-size:14px;font-weight:bold;text-align:center;direction:rtl}
 @media(max-width:500px){.logo{font-size:17px}.instruction{font-size:16px}.myLocation{bottom:252px}}
@@ -65,6 +66,9 @@ html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-family:
 <script>
 const map=L.map("map",{zoomControl:true}).setView([36.1911,44.0092],12);
 
+map.createPane("xoshNawHazards");
+map.getPane("xoshNawHazards").style.zIndex=700;
+
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
   maxZoom:19,
   attribution:"© OpenStreetMap"
@@ -73,6 +77,7 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
 let userLat=null,userLng=null,userMarker=null,destinationMarker=null,routeLine=null;
 let routeSteps=[],currentStep=0,lastVoiceStep=-1,destinationLat=null,destinationLng=null;
 let arrived=false,voiceUnlocked=false,hazardMarkers=[],hazards=[],routeCoordinates=[];
+let hazardsLoadedForRoute=false;
 
 const voices={
   right:new Audio("right.mp3"),
@@ -125,14 +130,18 @@ function distanceToRoute(lat,lng){
 
 function clearHazards(){
   hazardMarkers.forEach(m=>map.removeLayer(m));
-  hazardMarkers=[];hazards=[];
+  hazardMarkers=[];
+  hazards=[];
+  hazardsLoadedForRoute=false;
 }
 
 function createHazardIcon(emoji){
   return L.divIcon({
-    className:"",
+    className:"xosh-naw-hazard-icon",
     html:`<div class="hazardMarker">${emoji}</div>`,
-    iconSize:[38,38],iconAnchor:[19,19],popupAnchor:[0,-20]
+    iconSize:[38,38],
+    iconAnchor:[19,19],
+    popupAnchor:[0,-20]
   });
 }
 
@@ -179,24 +188,39 @@ out center;`;
 
       const marker=L.marker([lat,lng],{
         icon:createHazardIcon(type==="camera"?"📸":"🚧"),
-        zIndexOffset:1000
+        zIndexOffset:10000,
+        pane:"xoshNawHazards",
+        keyboard:false,
+        bubblingMouseEvents:false
       }).addTo(map);
 
       marker.bindPopup(`<div class="hazardPopup">${type==="camera"?"📸 کامێرای خێرایی":"🚧 تاسەی ڕێگا"}</div>`);
       hazardMarkers.push(marker);
     });
+
+    hazardsLoadedForRoute=true;
+    keepHazardsVisible();
   }catch(error){console.log("Overpass error:",error)}
+}
+
+function keepHazardsVisible(){
+  if(!hazards.length)return;
+
+  hazards.forEach((h,i)=>{
+    const marker=hazardMarkers[i];
+    if(marker && !map.hasLayer(marker)){
+      marker.addTo(map);
+    }
+  });
 }
 
 function checkHazards(){
   if(!hazards.length||userLat===null||userLng===null)return;
-  hazards.forEach(h=>{
-    const d=distanceMeters(userLat,userLng,h.lat,h.lng);
-    if(d<30){
-      document.getElementById("instruction").innerText=
-        h.type==="camera"?"📸 لە نزیک کامێرای خێرایی":"🚧 لە نزیک تاسەی ڕێگا";
-    }
-  });
+
+  keepHazardsVisible();
+
+  // The marker stays on the map even when you get very close to it.
+  // Do not remove or hide the marker based on distance.
 }
 
 function locateMe(){
@@ -338,6 +362,9 @@ function navigate(){
 document.getElementById("searchInput").addEventListener("keydown",event=>{
   if(event.key==="Enter")searchPlace();
 });
+
+// Keep 🚧 and 📸 markers visible during zooming, panning and GPS updates.
+map.on("zoomend moveend", keepHazardsVisible);
 
 locateMe();
 </script>
