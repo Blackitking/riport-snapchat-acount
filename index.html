@@ -2,168 +2,506 @@
 <html lang="ku" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 
 <title>XOSHNAW MAP</title>
 
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
+
 *{
   box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
-body{
+html,body{
   margin:0;
-  font-family:Arial,sans-serif;
-  background:#111;
-  color:white;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:
+    Arial,
+    "Noto Sans Arabic",
+    sans-serif;
+  background:#07111f;
 }
 
 #map{
   width:100%;
-  height:100vh;
+  height:100%;
 }
 
-.panel{
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar{
   position:fixed;
-  top:15px;
-  right:15px;
-  left:15px;
-  z-index:1000;
-  background:rgba(20,20,20,.94);
-  padding:12px;
-  border-radius:15px;
-  box-shadow:0 5px 20px #000;
+  top:12px;
+  right:12px;
+  left:12px;
+  z-index:2000;
+
+  height:58px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:7px 10px;
+
+  background:rgba(8,18,32,.90);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:20px;
+
+  box-shadow:
+    0 10px 35px rgba(0,0,0,.35);
 }
 
-.search{
+.logo{
+  display:flex;
+  align-items:center;
+  gap:9px;
+
+  font-size:19px;
+  font-weight:900;
+  letter-spacing:.5px;
+}
+
+.logoIcon{
+  width:40px;
+  height:40px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:13px;
+
+  background:linear-gradient(
+    135deg,
+    #1687ff,
+    #00c6ff
+  );
+
+  box-shadow:
+    0 5px 20px rgba(0,160,255,.35);
+
+  font-size:21px;
+}
+
+.refreshBtn{
+  width:42px;
+  height:42px;
+
+  border:0;
+  border-radius:13px;
+
+  color:white;
+
+  background:rgba(255,255,255,.10);
+
+  font-size:21px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  transition:.2s;
+}
+
+.refreshBtn:active{
+  transform:rotate(180deg) scale(.92);
+  background:#1687ff;
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.searchBox{
+  position:fixed;
+
+  top:82px;
+  right:12px;
+  left:12px;
+
+  z-index:1900;
+
   display:flex;
   gap:8px;
 }
 
-.search input{
+.searchInput{
+  min-width:0;
   flex:1;
-  padding:13px;
-  border:0;
-  border-radius:10px;
-  font-size:16px;
+
+  height:52px;
+
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:17px;
+
   outline:none;
+
+  padding:0 17px;
+
+  font-size:16px;
+  color:white;
+
+  background:rgba(8,18,32,.90);
+
+  backdrop-filter:blur(15px);
+  -webkit-backdrop-filter:blur(15px);
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.25);
 }
 
-button{
+.searchInput::placeholder{
+  color:#9ca9b8;
+}
+
+.searchBtn{
+  width:58px;
+  height:52px;
+
   border:0;
-  border-radius:10px;
-  padding:12px 15px;
-  background:#1687ff;
+  border-radius:17px;
+
   color:white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1687ff,
+      #00b8ff
+    );
+
+  font-size:21px;
+  font-weight:bold;
+
+  box-shadow:
+    0 8px 25px rgba(0,140,255,.30);
+}
+
+.searchBtn:active{
+  transform:scale(.94);
+}
+
+/* =========================
+   NAVIGATION CARD
+========================= */
+
+.navigationCard{
+  position:fixed;
+
+  right:12px;
+  left:12px;
+  bottom:15px;
+
+  z-index:1800;
+
+  background:rgba(7,17,31,.94);
+
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+
+  border:1px solid rgba(255,255,255,.10);
+
+  border-radius:24px;
+
+  padding:15px;
+
+  box-shadow:
+    0 -10px 40px rgba(0,0,0,.35);
+}
+
+.stats{
+  display:flex;
+  gap:8px;
+  margin-bottom:10px;
+}
+
+.stat{
+  flex:1;
+
+  background:rgba(255,255,255,.06);
+
+  border-radius:15px;
+
+  padding:9px;
+
+  text-align:center;
+}
+
+.statTitle{
+  color:#8997a8;
+  font-size:12px;
+  margin-bottom:3px;
+}
+
+.statValue{
+  color:white;
+  font-size:16px;
+  font-weight:900;
+}
+
+.instruction{
+  min-height:58px;
+
+  display:flex;
+  align-items:center;
+
+  padding:12px 15px;
+
+  border-radius:17px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(22,135,255,.20),
+      rgba(0,198,255,.08)
+    );
+
+  border:1px solid rgba(0,174,255,.18);
+
+  color:#fff;
+
+  font-size:17px;
+  font-weight:900;
+
+  line-height:1.6;
+}
+
+.locationBtn{
+  width:100%;
+
+  height:48px;
+
+  margin-top:9px;
+
+  border:0;
+  border-radius:15px;
+
+  color:white;
+
+  background:rgba(255,255,255,.08);
+
   font-size:15px;
   font-weight:bold;
-  cursor:pointer;
 }
 
-button:active{
-  transform:scale(.97);
+.locationBtn:active{
+  background:#1687ff;
+  transform:scale(.98);
 }
 
-.info{
-  margin-top:10px;
-  background:#222;
-  border-radius:10px;
-  padding:10px;
-  line-height:1.8;
-}
+/* =========================
+   PULL TO REFRESH
+========================= */
 
-#instruction{
-  font-size:18px;
-  font-weight:bold;
-  color:#00d9ff;
-}
+.pullRefresh{
+  position:fixed;
 
-.buttons{
+  top:-70px;
+  left:50%;
+
+  transform:translateX(-50%);
+
+  z-index:3000;
+
+  width:48px;
+  height:48px;
+
   display:flex;
-  gap:7px;
-  margin-top:8px;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:rgba(8,18,32,.95);
+
+  border:1px solid rgba(255,255,255,.15);
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.35);
+
+  color:white;
+
+  font-size:22px;
+
+  transition:top .15s ease;
 }
 
-.buttons button{
-  flex:1;
+.pullRefresh.show{
+  top:12px;
 }
 
-#voiceStatus{
-  margin-top:8px;
-  text-align:center;
-  font-size:13px;
-  color:#aaa;
+.pullRefresh.rotate{
+  animation:spin .7s linear infinite;
+}
+
+@keyframes spin{
+  from{transform:translateX(-50%) rotate(0deg)}
+  to{transform:translateX(-50%) rotate(360deg)}
+}
+
+/* =========================
+   LEAFLET
+========================= */
+
+.leaflet-control-zoom{
+  margin-top:155px !important;
+  border:0 !important;
+}
+
+.leaflet-control-zoom a{
+  background:#081220 !important;
+  color:white !important;
+  border:0 !important;
 }
 
 .leaflet-control-attribution{
-  font-size:9px;
+  font-size:8px;
 }
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:500px){
+
+  .logo{
+    font-size:17px;
+  }
+
+  .navigationCard{
+    bottom:10px;
+  }
+
+  .instruction{
+    font-size:16px;
+  }
+
+}
+
 </style>
 </head>
 
 <body>
 
-<div id="map"></div>
+<!-- PULL REFRESH -->
+<div id="pullRefresh" class="pullRefresh">
+  🔄
+</div>
 
-<div class="panel">
+<!-- TOP BAR -->
+<div class="topbar">
 
-  <div class="search">
-    <input
-      id="searchInput"
-      type="text"
-      placeholder="شوێن یان شار بنووسە..."
-    >
-
-    <button onclick="searchPlace()">گەڕان</button>
+  <div class="logo">
+    <div class="logoIcon">🧭</div>
+    XOSHNAW MAP
   </div>
 
-  <div class="info">
-
-    <div>
-      📍 دووری:
-      <b id="distance">-</b>
-    </div>
-
-    <div>
-      ⏱️ کاتی گەیشتن:
-      <b id="eta">-</b>
-    </div>
-
-    <div id="instruction">
-      شوێنێک هەڵبژێرە
-    </div>
-
-  </div>
-
-  <div class="buttons">
-
-    <button onclick="locateMe()">
-      📍 شوێنی من
-    </button>
-
-    <button onclick="enableVoice()">
-      🔊 چالاککردنی دەنگ
-    </button>
-
-    <button onclick="testVoices()">
-      🎵 تاقیکردنەوە
-    </button>
-
-  </div>
-
-  <div id="voiceStatus">
-    دەنگ چالاک نەکراوە
-  </div>
+  <button
+    class="refreshBtn"
+    onclick="refreshPage()">
+    🔄
+  </button>
 
 </div>
 
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- SEARCH -->
+<div class="searchBox">
+
+  <input
+    id="searchInput"
+    class="searchInput"
+    type="text"
+    placeholder="شوێنێک بگەڕێ..."
+    autocomplete="off">
+
+  <button
+    class="searchBtn"
+    onclick="searchPlace()">
+    🔍
+  </button>
+
+</div>
+
+
+<!-- MAP -->
+<div id="map"></div>
+
+
+<!-- NAVIGATION CARD -->
+<div class="navigationCard">
+
+  <div class="stats">
+
+    <div class="stat">
+
+      <div class="statTitle">
+        📍 دووری
+      </div>
+
+      <div
+        id="distance"
+        class="statValue">
+        -
+      </div>
+
+    </div>
+
+    <div class="stat">
+
+      <div class="statTitle">
+        ⏱️ کاتی گەیشتن
+      </div>
+
+      <div
+        id="eta"
+        class="statValue">
+        -
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="instruction"
+    class="instruction">
+
+    🧭 شوێنێک بگەڕێ بۆ دەستپێکردنی ڕێگا
+
+  </div>
+
+
+  <button
+    class="locationBtn"
+    onclick="locateMe()">
+
+    📍 شوێنی من
+
+  </button>
+
+</div>
+
+
+<script
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
 
 <script>
 
@@ -171,7 +509,14 @@ button:active{
 // MAP
 //////////////////////////////////////////////////////
 
-const map = L.map("map").setView([36.1911,44.0092],12);
+const map =
+L.map("map",{
+  zoomControl:true
+}).setView(
+  [36.1911,44.0092],
+  12
+);
+
 
 L.tileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -194,7 +539,9 @@ let destinationMarker = null;
 let routeLine = null;
 
 let routeSteps = [];
+
 let currentStep = 0;
+let lastVoiceStep = -1;
 
 let destinationLat = null;
 let destinationLng = null;
@@ -203,32 +550,84 @@ let arrived = false;
 
 let voiceEnabled = false;
 
-let lastVoiceStep = -1;
-
 
 //////////////////////////////////////////////////////
-// MP3 VOICES
+// MP3
 //////////////////////////////////////////////////////
 
 const voices = {
 
-  right: new Audio("right.mp3"),
+  right:
+    new Audio("right.mp3"),
 
-  left: new Audio("left.mp3"),
+  left:
+    new Audio("left.mp3"),
 
-  straight: new Audio("straight.mp3"),
+  straight:
+    new Audio("straight.mp3"),
 
-  start: new Audio("start.mp3"),
+  start:
+    new Audio("start.mp3"),
 
-  arrived: new Audio("arrived.mp3")
+  arrived:
+    new Audio("arrived.mp3")
 
 };
 
 
-// Preload
-Object.values(voices).forEach(audio => {
-  audio.preload = "auto";
-});
+Object.values(voices).forEach(
+  audio => {
+
+    audio.preload = "auto";
+
+  }
+);
+
+
+//////////////////////////////////////////////////////
+// ENABLE AUDIO ON FIRST USER TOUCH
+//////////////////////////////////////////////////////
+
+document.addEventListener(
+  "pointerdown",
+  unlockAudio,
+  {
+    once:true
+  }
+);
+
+
+function unlockAudio(){
+
+  voiceEnabled = true;
+
+  Object.values(voices).forEach(
+    audio => {
+
+      audio.muted = true;
+
+      const p = audio.play();
+
+      if(p){
+
+        p.then(() => {
+
+          audio.pause();
+          audio.currentTime = 0;
+          audio.muted = false;
+
+        }).catch(() => {
+
+          audio.muted = false;
+
+        });
+
+      }
+
+    }
+  );
+
+}
 
 
 //////////////////////////////////////////////////////
@@ -238,115 +637,71 @@ Object.values(voices).forEach(audio => {
 function playVoice(name){
 
   if(!voiceEnabled){
-    return;
+    voiceEnabled = true;
   }
 
-  const audio = voices[name];
+  const audio =
+    voices[name];
 
   if(!audio){
     return;
   }
 
-  // Stop every other sound
-  Object.values(voices).forEach(a => {
-    try{
-      a.pause();
-      a.currentTime = 0;
-    }catch(e){}
-  });
+  Object.values(voices).forEach(
+    a => {
+
+      try{
+
+        a.pause();
+        a.currentTime = 0;
+
+      }catch(e){}
+
+    }
+  );
 
   audio.currentTime = 0;
 
-  audio.play().catch(error => {
+  audio.play().catch(
+    error => {
 
-    console.log("Audio blocked:",error);
+      console.log(
+        "Audio error:",
+        error
+      );
 
-    document.getElementById("voiceStatus").innerText =
-      "🔊 تکایە دووبارە دوگمەی چالاککردنی دەنگ دابگرە";
-
-  });
-}
-
-
-//////////////////////////////////////////////////////
-// ENABLE VOICE
-//////////////////////////////////////////////////////
-
-function enableVoice(){
-
-  voiceEnabled = true;
-
-  const status =
-    document.getElementById("voiceStatus");
-
-  status.innerText =
-    "🔊 دەنگ چالاک کرا";
-
-  // Browser audio unlock
-  Object.values(voices).forEach(audio => {
-
-    audio.muted = true;
-
-    audio.play()
-      .then(() => {
-
-        audio.pause();
-        audio.currentTime = 0;
-        audio.muted = false;
-
-      })
-      .catch(() => {
-
-        audio.muted = false;
-
-      });
-
-  });
+    }
+  );
 
 }
 
 
 //////////////////////////////////////////////////////
-// TEST ALL VOICES
+// REFRESH
 //////////////////////////////////////////////////////
 
-function testVoices(){
+function refreshPage(){
 
-  voiceEnabled = true;
-
-  playVoice("start");
-
-  setTimeout(() => {
-    playVoice("right");
-  },4000);
-
-  setTimeout(() => {
-    playVoice("left");
-  },7000);
-
-  setTimeout(() => {
-    playVoice("straight");
-  },9000);
-
-  setTimeout(() => {
-    playVoice("arrived");
-  },11000);
+  location.reload();
 
 }
 
 
 //////////////////////////////////////////////////////
-// GET USER LOCATION
+// GPS
 //////////////////////////////////////////////////////
 
 function locateMe(){
 
   if(!navigator.geolocation){
 
-    alert("GPS لەم وێبگەڕەدا بەردەست نییە");
+    alert(
+      "GPS لەم وێبگەڕەدا بەردەست نییە"
+    );
 
     return;
   }
+
 
   navigator.geolocation.getCurrentPosition(
 
@@ -369,8 +724,10 @@ function locateMe(){
 
     error => {
 
+      console.log(error);
+
       alert(
-        "نەتوانرا شوێنی تۆ دیاری بکرێت. تکایە GPS چالاک بکە."
+        "تکایە ڕێگە بە GPS بدە"
       );
 
     },
@@ -387,30 +744,35 @@ function locateMe(){
 
 
 //////////////////////////////////////////////////////
-// UPDATE USER MARKER
+// USER MARKER
 //////////////////////////////////////////////////////
 
 function updateUserMarker(){
 
-  if(userLat === null || userLng === null){
+  if(
+    userLat === null ||
+    userLng === null
+  ){
     return;
   }
 
+
   if(userMarker){
 
-    userMarker.setLatLng([
-      userLat,
-      userLng
-    ]);
+    userMarker.setLatLng(
+      [userLat,userLng]
+    );
 
   }else{
 
-    userMarker = L.marker([
-      userLat,
-      userLng
-    ])
-    .addTo(map)
-    .bindPopup("📍 شوێنی تۆ");
+    userMarker =
+      L.marker(
+        [userLat,userLng]
+      )
+      .addTo(map)
+      .bindPopup(
+        "📍 شوێنی تۆ"
+      );
 
   }
 
@@ -418,7 +780,7 @@ function updateUserMarker(){
 
 
 //////////////////////////////////////////////////////
-// WATCH GPS
+// LIVE GPS
 //////////////////////////////////////////////////////
 
 if(navigator.geolocation){
@@ -435,6 +797,7 @@ if(navigator.geolocation){
 
       updateUserMarker();
 
+
       if(
         destinationLat !== null &&
         destinationLng !== null
@@ -449,7 +812,7 @@ if(navigator.geolocation){
     error => {
 
       console.log(
-        "GPS error:",
+        "GPS:",
         error
       );
 
@@ -467,23 +830,36 @@ if(navigator.geolocation){
 
 
 //////////////////////////////////////////////////////
-// SEARCH PLACE
+// SEARCH
 //////////////////////////////////////////////////////
 
 async function searchPlace(){
 
+  unlockAudio();
+
+
   const input =
     document
-      .getElementById("searchInput")
-      .value
-      .trim();
+    .getElementById("searchInput")
+    .value
+    .trim();
+
 
   if(!input){
 
-    alert("تکایە ناوی شوێنێک بنووسە");
+    alert(
+      "تکایە ناوی شوێنێک بنووسە"
+    );
 
     return;
   }
+
+
+  document
+  .getElementById("instruction")
+  .innerText =
+  "🔎 بەدوای شوێنەکەدا دەگەڕێین...";
+
 
   try{
 
@@ -494,18 +870,25 @@ async function searchPlace(){
       encodeURIComponent(input) +
       "&limit=1";
 
+
     const response =
       await fetch(url);
+
 
     const data =
       await response.json();
 
+
     if(!data.length){
 
-      alert("شوێنەکە نەدۆزرایەوە");
+      document
+      .getElementById("instruction")
+      .innerText =
+      "❌ شوێنەکە نەدۆزرایەوە";
 
       return;
     }
+
 
     destinationLat =
       parseFloat(data[0].lat);
@@ -513,11 +896,15 @@ async function searchPlace(){
     destinationLng =
       parseFloat(data[0].lon);
 
+
     if(destinationMarker){
 
-      map.removeLayer(destinationMarker);
+      map.removeLayer(
+        destinationMarker
+      );
 
     }
+
 
     destinationMarker =
       L.marker([
@@ -526,16 +913,9 @@ async function searchPlace(){
       ])
       .addTo(map)
       .bindPopup(
-        "🎯 مەبەست<br>" +
-        data[0].display_name
+        "🎯 مەبەست"
       )
       .openPopup();
-
-
-    map.setView(
-      [destinationLat,destinationLng],
-      14
-    );
 
 
     arrived = false;
@@ -550,9 +930,10 @@ async function searchPlace(){
 
     console.log(error);
 
-    alert(
-      "کێشەیەک لە گەڕاندا ڕوویدا"
-    );
+    document
+    .getElementById("instruction")
+    .innerText =
+    "❌ هەڵەیەک ڕوویدا";
 
   }
 
@@ -572,9 +953,10 @@ async function createRoute(){
 
     locateMe();
 
-    alert(
-      "سەرەتا ڕێگە بدە GPS شوێنی تۆ بدۆزێتەوە"
-    );
+    document
+    .getElementById("instruction")
+    .innerText =
+    "📍 چاوەڕێی شوێنی GPS ـە...";
 
     return;
   }
@@ -592,6 +974,7 @@ async function createRoute(){
     const response =
       await fetch(url);
 
+
     const data =
       await response.json();
 
@@ -601,9 +984,10 @@ async function createRoute(){
       !data.routes.length
     ){
 
-      alert(
-        "ڕێگای ئۆتۆمبێل نەدۆزرایەوە"
-      );
+      document
+      .getElementById("instruction")
+      .innerText =
+      "❌ ڕێگای ئۆتۆمبێل نەدۆزرایەوە";
 
       return;
     }
@@ -613,20 +997,14 @@ async function createRoute(){
       data.routes[0];
 
 
-    //////////////////////////////////////////////////
-    // REMOVE OLD ROUTE
-    //////////////////////////////////////////////////
-
     if(routeLine){
 
-      map.removeLayer(routeLine);
+      map.removeLayer(
+        routeLine
+      );
 
     }
 
-
-    //////////////////////////////////////////////////
-    // DRAW ROUTE
-    //////////////////////////////////////////////////
 
     routeLine =
       L.geoJSON(
@@ -635,7 +1013,7 @@ async function createRoute(){
           style:{
             color:"#1687ff",
             weight:7,
-            opacity:.85
+            opacity:.9
           }
         }
       )
@@ -645,47 +1023,40 @@ async function createRoute(){
     map.fitBounds(
       routeLine.getBounds(),
       {
-        padding:[70,70]
+        padding:[90,90]
       }
     );
 
 
-    //////////////////////////////////////////////////
-    // DISTANCE
-    //////////////////////////////////////////////////
-
     const distanceKm =
       route.distance / 1000;
 
+
     document
-      .getElementById("distance")
-      .innerText =
-      distanceKm.toFixed(2) +
-      " km";
+    .getElementById("distance")
+    .innerText =
+    distanceKm.toFixed(2)
+    + " km";
 
-
-    //////////////////////////////////////////////////
-    // ETA
-    //////////////////////////////////////////////////
 
     const minutes =
-      Math.ceil(
-        route.duration / 60
+      Math.max(
+        1,
+        Math.ceil(
+          route.duration / 60
+        )
       );
 
+
     document
-      .getElementById("eta")
-      .innerText =
-      minutes +
-      " خولەک";
+    .getElementById("eta")
+    .innerText =
+    minutes + " خولەک";
 
-
-    //////////////////////////////////////////////////
-    // STEPS
-    //////////////////////////////////////////////////
 
     routeSteps =
       route.legs[0].steps || [];
+
 
     currentStep = 0;
     lastVoiceStep = -1;
@@ -693,29 +1064,30 @@ async function createRoute(){
 
 
     document
-      .getElementById("instruction")
-      .innerText =
-      "🚗 دەست بە ڕێگاکە دەکەین";
+    .getElementById("instruction")
+    .innerText =
+    "🚗 دەست بە ڕێگاکە دەکەین";
 
 
-    //////////////////////////////////////////////////
     // START VOICE
-    //////////////////////////////////////////////////
+    setTimeout(
+      () => {
 
-    setTimeout(() => {
+        playVoice("start");
 
-      playVoice("start");
-
-    },500);
+      },
+      400
+    );
 
 
   }catch(error){
 
     console.log(error);
 
-    alert(
-      "کێشەیەک لە دروستکردنی ڕێگاکەدا ڕوویدا"
-    );
+    document
+    .getElementById("instruction")
+    .innerText =
+    "❌ کێشە لە دروستکردنی ڕێگا";
 
   }
 
@@ -723,7 +1095,7 @@ async function createRoute(){
 
 
 //////////////////////////////////////////////////////
-// DISTANCE BETWEEN TWO GPS POINTS
+// DISTANCE
 //////////////////////////////////////////////////////
 
 function distanceMeters(
@@ -735,19 +1107,29 @@ function distanceMeters(
 
   const R = 6371000;
 
+
   const p1 =
-    lat1 * Math.PI / 180;
+    lat1 *
+    Math.PI /
+    180;
+
 
   const p2 =
-    lat2 * Math.PI / 180;
+    lat2 *
+    Math.PI /
+    180;
+
 
   const dLat =
     (lat2-lat1) *
-    Math.PI / 180;
+    Math.PI /
+    180;
+
 
   const dLon =
     (lon2-lon1) *
-    Math.PI / 180;
+    Math.PI /
+    180;
 
 
   const a =
@@ -791,7 +1173,7 @@ function navigate(){
 
 
   //////////////////////////////////////////////////
-  // ARRIVAL CHECK
+  // ARRIVAL
   //////////////////////////////////////////////////
 
   const destinationDistance =
@@ -809,31 +1191,36 @@ function navigate(){
 
       arrived = true;
 
-      document
-        .getElementById("distance")
-        .innerText =
-        "0 m";
 
       document
-        .getElementById("eta")
-        .innerText =
-        "گەیشتیت";
+      .getElementById("distance")
+      .innerText =
+      "0 m";
+
 
       document
-        .getElementById("instruction")
-        .innerText =
-        "🏁 گەیشتیت بە مەبەست";
+      .getElementById("eta")
+      .innerText =
+      "گەیشتیت";
+
+
+      document
+      .getElementById("instruction")
+      .innerText =
+      "🏁 گەیشتیت بە مەبەست";
+
 
       playVoice("arrived");
 
     }
 
     return;
+
   }
 
 
   //////////////////////////////////////////////////
-  // FIND NEXT MANEUVER
+  // NEXT STEP
   //////////////////////////////////////////////////
 
   let bestStep = null;
@@ -879,9 +1266,7 @@ function navigate(){
     if(d < bestDistance){
 
       bestDistance = d;
-
       bestStep = step;
-
       bestIndex = i;
 
     }
@@ -890,38 +1275,27 @@ function navigate(){
 
 
   if(!bestStep){
-
     return;
   }
 
 
-  currentStep = bestIndex;
+  currentStep =
+    bestIndex;
 
-
-  //////////////////////////////////////////////////
-  // SHOW DISTANCE TO MANEUVER
-  //////////////////////////////////////////////////
 
   document
-    .getElementById("distance")
-    .innerText =
-    Math.round(bestDistance) +
-    " m";
+  .getElementById("distance")
+  .innerText =
+  Math.round(bestDistance)
+  + " m";
 
-
-  //////////////////////////////////////////////////
-  // MANEUVER TYPE
-  //////////////////////////////////////////////////
 
   const type =
     bestStep.maneuver.type || "";
 
+
   const modifier =
     bestStep.maneuver.modifier || "";
-
-
-  let instruction =
-    "";
 
 
   //////////////////////////////////////////////////
@@ -934,8 +1308,11 @@ function navigate(){
     modifier === "slight right"
   ){
 
-    instruction =
-      "➡️ بە دەستی ڕاست بسوڕێوە";
+    document
+    .getElementById("instruction")
+    .innerText =
+    "➡️ بە دەستی ڕاست بسوڕێوە";
+
 
     if(
       bestDistance <= 50 &&
@@ -943,7 +1320,7 @@ function navigate(){
     ){
 
       lastVoiceStep =
-        bestIndex;
+      bestIndex;
 
       playVoice("right");
 
@@ -962,8 +1339,11 @@ function navigate(){
     modifier === "slight left"
   ){
 
-    instruction =
-      "⬅️ بە دەستی چەپ بسوڕێوە";
+    document
+    .getElementById("instruction")
+    .innerText =
+    "⬅️ بە دەستی چەپ بسوڕێوە";
+
 
     if(
       bestDistance <= 50 &&
@@ -971,7 +1351,7 @@ function navigate(){
     ){
 
       lastVoiceStep =
-        bestIndex;
+      bestIndex;
 
       playVoice("left");
 
@@ -981,29 +1361,17 @@ function navigate(){
 
 
   //////////////////////////////////////////////////
-  // U-TURN
+  // U TURN
   //////////////////////////////////////////////////
 
   else if(
     modifier === "uturn"
   ){
 
-    instruction =
-      "🔄 پاشگەز ببەوە";
-
-    if(
-      bestDistance <= 50 &&
-      lastVoiceStep !== bestIndex
-    ){
-
-      lastVoiceStep =
-        bestIndex;
-
-      speakKurdish(
-        "پاشگەز ببەوە"
-      );
-
-    }
+    document
+    .getElementById("instruction")
+    .innerText =
+    "🔄 پاشگەز ببەوە";
 
   }
 
@@ -1016,22 +1384,10 @@ function navigate(){
     type === "roundabout"
   ){
 
-    instruction =
-      "🔄 بچۆ ناو بازنەکە";
-
-    if(
-      bestDistance <= 50 &&
-      lastVoiceStep !== bestIndex
-    ){
-
-      lastVoiceStep =
-        bestIndex;
-
-      speakKurdish(
-        "بچۆ ناو بازنەکە"
-      );
-
-    }
+    document
+    .getElementById("instruction")
+    .innerText =
+    "🔄 بچۆ ناو بازنەکە";
 
   }
 
@@ -1042,8 +1398,11 @@ function navigate(){
 
   else{
 
-    instruction =
-      "⬆️ بە ڕاستەوخۆ بەردەوام بە";
+    document
+    .getElementById("instruction")
+    .innerText =
+    "⬆️ بە ڕاستەوخۆ بەردەوام بە";
+
 
     if(
       bestDistance <= 50 &&
@@ -1051,7 +1410,7 @@ function navigate(){
     ){
 
       lastVoiceStep =
-        bestIndex;
+      bestIndex;
 
       playVoice("straight");
 
@@ -1059,80 +1418,180 @@ function navigate(){
 
   }
 
-
-  document
-    .getElementById("instruction")
-    .innerText =
-    instruction;
-
 }
 
 
 //////////////////////////////////////////////////////
-// BROWSER KURDISH SPEECH
-//////////////////////////////////////////////////////
-
-function speakKurdish(text){
-
-  if(!voiceEnabled){
-    return;
-  }
-
-  if(
-    !("speechSynthesis" in window)
-  ){
-
-    return;
-  }
-
-
-  window.speechSynthesis.cancel();
-
-
-  const speech =
-    new SpeechSynthesisUtterance(text);
-
-  speech.lang = "ku-IQ";
-
-  speech.rate = .9;
-
-  speech.pitch = 1;
-
-  speech.volume = 1;
-
-
-  window.speechSynthesis.speak(
-    speech
-  );
-
-}
-
-
-//////////////////////////////////////////////////////
-// START GPS AUTOMATICALLY
-//////////////////////////////////////////////////////
-
-locateMe();
-
-
-//////////////////////////////////////////////////////
-// ENTER KEY SEARCH
+// ENTER SEARCH
 //////////////////////////////////////////////////////
 
 document
-  .getElementById("searchInput")
-  .addEventListener(
-    "keydown",
-    function(event){
+.getElementById("searchInput")
+.addEventListener(
+  "keydown",
+  event => {
 
-      if(event.key === "Enter"){
+    if(event.key === "Enter"){
 
-        searchPlace();
+      searchPlace();
+
+    }
+
+  }
+);
+
+
+//////////////////////////////////////////////////////
+// PULL TO REFRESH
+//////////////////////////////////////////////////////
+
+let startY = 0;
+let pulling = false;
+
+
+document.addEventListener(
+  "touchstart",
+  event => {
+
+    if(window.scrollY !== 0){
+      return;
+    }
+
+    startY =
+      event.touches[0].clientY;
+
+    pulling = true;
+
+  },
+  {
+    passive:true
+  }
+);
+
+
+document.addEventListener(
+  "touchmove",
+  event => {
+
+    if(!pulling){
+      return;
+    }
+
+
+    const currentY =
+      event.touches[0].clientY;
+
+
+    const distance =
+      currentY - startY;
+
+
+    if(
+      distance > 20 &&
+      distance < 130
+    ){
+
+      const indicator =
+        document.getElementById(
+          "pullRefresh"
+        );
+
+
+      indicator.classList.add(
+        "show"
+      );
+
+
+      if(distance > 75){
+
+        indicator.style.top =
+          "25px";
+
+      }else{
+
+        indicator.style.top =
+          "-10px";
 
       }
 
     }
-  );
+
+  },
+  {
+    passive:true
+  }
+);
+
+
+document.addEventListener(
+  "touchend",
+  event => {
+
+    if(!pulling){
+      return;
+    }
+
+
+    pulling = false;
+
+
+    const indicator =
+      document.getElementById(
+        "pullRefresh"
+      );
+
+
+    const currentY =
+      event.changedTouches[0].clientY;
+
+
+    const distance =
+      currentY - startY;
+
+
+    if(distance > 75){
+
+      indicator.classList.add(
+        "rotate"
+      );
+
+
+      indicator.style.top =
+        "25px";
+
+
+      setTimeout(
+        () => {
+
+          location.reload();
+
+        },
+        500
+      );
+
+    }else{
+
+      indicator.classList.remove(
+        "show"
+      );
+
+      indicator.style.top =
+        "-70px";
+
+    }
+
+  },
+  {
+    passive:true
+  }
+);
+
+
+//////////////////////////////////////////////////////
+// START GPS
+//////////////////////////////////////////////////////
+
+locateMe();
 
 </script>
 
