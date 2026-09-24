@@ -1,1989 +1,345 @@
 <!DOCTYPE html>
 <html lang="ku" dir="rtl">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width,
-initial-scale=1,
-maximum-scale=1,
-user-scalable=no">
-
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>XOSHNAW MAP</title>
-
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-
-*{
-box-sizing:border-box;
--webkit-tap-highlight-color:transparent;
-}
-
-html,
-body{
-margin:0;
-padding:0;
-width:100%;
-height:100%;
-overflow:hidden;
-font-family:Arial,
-"Noto Sans Arabic",
-sans-serif;
-background:#07111d;
-}
-
-#map{
-position:fixed;
-inset:0;
-width:100%;
-height:100%;
-}
-
-/* TOP BAR */
-
-.topbar{
-position:fixed;
-top:12px;
-right:12px;
-left:12px;
-height:58px;
-z-index:5000;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:7px 9px;
-background:rgba(7,16,29,.88);
-border:1px solid rgba(255,255,255,.12);
-border-radius:20px;
-backdrop-filter:blur(18px);
--webkit-backdrop-filter:blur(18px);
-box-shadow:0 10px 35px rgba(0,0,0,.40);
-}
-
-.logo{
-display:flex;
-align-items:center;
-gap:9px;
-color:white;
-font-size:19px;
-font-weight:900;
-}
-
-.logoIcon{
-width:42px;
-height:42px;
-display:flex;
-align-items:center;
-justify-content:center;
-border-radius:14px;
-background:linear-gradient(135deg,#087cff,#00c6ff);
-font-size:22px;
-box-shadow:0 5px 20px rgba(0,150,255,.35);
-}
-
-.refresh{
-width:43px;
-height:43px;
-border:0;
-border-radius:14px;
-background:rgba(255,255,255,.10);
-color:white;
-font-size:22px;
-display:flex;
-align-items:center;
-justify-content:center;
-}
-
-.refresh:active{
-background:#1687ff;
-transform:rotate(180deg);
-}
-
-/* SEARCH */
-
-.searchBox{
-position:fixed;
-top:82px;
-right:12px;
-left:12px;
-z-index:4000;
-display:flex;
-gap:8px;
-}
-
-.searchInput{
-height:53px;
-flex:1;
-min-width:0;
-border:1px solid rgba(255,255,255,.10);
-border-radius:18px;
-outline:none;
-padding:0 17px;
-font-size:16px;
-color:white;
-background:rgba(7,16,29,.90);
-backdrop-filter:blur(18px);
--webkit-backdrop-filter:blur(18px);
-box-shadow:0 8px 25px rgba(0,0,0,.30);
-}
-
-.searchInput::placeholder{
-color:#9ba9b9;
-}
-
-.searchBtn{
-width:58px;
-height:53px;
-border:0;
-border-radius:18px;
-background:linear-gradient(135deg,#087cff,#00baff);
-color:white;
-font-size:21px;
-font-weight:bold;
-box-shadow:0 8px 25px rgba(0,130,255,.35);
-}
-
-.searchBtn:active{
-transform:scale(.94);
-}
-
-/* LOCATION */
-
-.myLocation{
-position:fixed;
-right:15px;
-bottom:245px;
-z-index:3000;
-width:52px;
-height:52px;
-border:1px solid rgba(255,255,255,.15);
-border-radius:17px;
-background:rgba(7,16,29,.92);
-color:white;
-font-size:23px;
-box-shadow:0 8px 25px rgba(0,0,0,.35);
-backdrop-filter:blur(15px);
-}
-
-.myLocation:active{
-transform:scale(.92);
-background:#1687ff;
-}
-
-/* NAV CARD */
-
-.navCard{
-position:fixed;
-left:10px;
-right:10px;
-bottom:10px;
-z-index:3000;
-padding:13px;
-border-radius:25px;
-background:rgba(7,16,29,.94);
-border:1px solid rgba(255,255,255,.11);
-backdrop-filter:blur(20px);
--webkit-backdrop-filter:blur(20px);
-box-shadow:0 -10px 40px rgba(0,0,0,.40);
-}
-
-.stats{
-display:flex;
-gap:8px;
-margin-bottom:9px;
-}
-
-.stat{
-flex:1;
-padding:9px;
-text-align:center;
-border-radius:15px;
-background:rgba(255,255,255,.055);
-}
-
-.statTitle{
-font-size:12px;
-color:#8d9aaa;
-margin-bottom:3px;
-}
-
-.statValue{
-font-size:16px;
-font-weight:900;
-color:white;
-}
-
-.instruction{
-min-height:59px;
-display:flex;
-align-items:center;
-padding:11px 14px;
-border-radius:17px;
-background:linear-gradient(
-135deg,
-rgba(0,137,255,.20),
-rgba(0,210,255,.07)
-);
-border:1px solid rgba(0,175,255,.18);
-font-size:17px;
-font-weight:900;
-line-height:1.6;
-color:#fff;
-}
-
-.locationText{
-width:100%;
-margin-top:8px;
-height:45px;
-display:flex;
-align-items:center;
-justify-content:center;
-border-radius:15px;
-background:rgba(255,255,255,.065);
-color:#dce5ee;
-font-size:14px;
-font-weight:bold;
-}
-
-/* PULL REFRESH */
-
-.pullRefresh{
-position:fixed;
-top:-65px;
-left:50%;
-transform:translateX(-50%);
-z-index:9999;
-width:48px;
-height:48px;
-display:flex;
-align-items:center;
-justify-content:center;
-border-radius:50%;
-background:rgba(7,16,29,.96);
-border:1px solid rgba(255,255,255,.16);
-color:white;
-font-size:22px;
-box-shadow:0 8px 25px rgba(0,0,0,.4);
-transition:.2s;
-}
-
-.pullRefresh.show{
-top:14px;
-}
-
-.pullRefresh.spin{
-animation:spin .7s linear infinite;
-}
-
-@keyframes spin{
-
-from{
-transform:translateX(-50%) rotate(0deg);
-}
-
-to{
-transform:translateX(-50%) rotate(360deg);
-}
-
-}
-
-/* LEAFLET */
-
-.leaflet-control-zoom{
-margin-top:155px !important;
-border:0 !important;
-}
-
-.leaflet-control-zoom a{
-background:#081525 !important;
-color:white !important;
-border:0 !important;
-}
-
-.leaflet-control-attribution{
-font-size:8px;
-background:rgba(0,0,0,.35) !important;
-color:#aaa !important;
-}
-
-/* HAZARD MARKERS */
-
-.hazardMarker{
-width:38px;
-height:38px;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:21px;
-background:rgba(7,16,29,.96);
-border:2px solid rgba(255,255,255,.85);
-box-shadow:0 4px 15px rgba(0,0,0,.45);
-}
-
-.hazardPopup{
-font-size:14px;
-font-weight:bold;
-text-align:center;
-direction:rtl;
-}
-
-@media(max-width:500px){
-
-.logo{
-font-size:17px;
-}
-
-.instruction{
-font-size:16px;
-}
-
-.myLocation{
-bottom:252px;
-}
-
-}
-
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-family:Arial,"Noto Sans Arabic",sans-serif;background:#07111d}
+#map{position:fixed;inset:0;width:100%;height:100%}
+.topbar{position:fixed;top:12px;right:12px;left:12px;height:58px;z-index:5000;display:flex;align-items:center;justify-content:space-between;padding:7px 9px;background:rgba(7,16,29,.88);border:1px solid rgba(255,255,255,.12);border-radius:20px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 10px 35px rgba(0,0,0,.40)}
+.logo{display:flex;align-items:center;gap:9px;color:white;font-size:19px;font-weight:900}
+.logoIcon{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:14px;background:linear-gradient(135deg,#087cff,#00c6ff);font-size:22px;box-shadow:0 5px 20px rgba(0,150,255,.35)}
+.refresh{width:43px;height:43px;border:0;border-radius:14px;background:rgba(255,255,255,.10);color:white;font-size:22px;display:flex;align-items:center;justify-content:center}
+.refresh:active{background:#1687ff;transform:rotate(180deg)}
+.searchBox{position:fixed;top:82px;right:12px;left:12px;z-index:4000;display:flex;gap:8px}
+.searchInput{height:53px;flex:1;min-width:0;border:1px solid rgba(255,255,255,.10);border-radius:18px;outline:none;padding:0 17px;font-size:16px;color:white;background:rgba(7,16,29,.90);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 8px 25px rgba(0,0,0,.30)}
+.searchInput::placeholder{color:#9ba9b9}
+.searchBtn{width:58px;height:53px;border:0;border-radius:18px;background:linear-gradient(135deg,#087cff,#00baff);color:white;font-size:21px;font-weight:bold;box-shadow:0 8px 25px rgba(0,130,255,.35)}
+.searchBtn:active{transform:scale(.94)}
+.myLocation{position:fixed;right:15px;bottom:245px;z-index:3000;width:52px;height:52px;border:1px solid rgba(255,255,255,.15);border-radius:17px;background:rgba(7,16,29,.92);color:white;font-size:23px;box-shadow:0 8px 25px rgba(0,0,0,.35);backdrop-filter:blur(15px)}
+.myLocation:active{transform:scale(.92);background:#1687ff}
+.navCard{position:fixed;left:10px;right:10px;bottom:10px;z-index:3000;padding:13px;border-radius:25px;background:rgba(7,16,29,.94);border:1px solid rgba(255,255,255,.11);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 -10px 40px rgba(0,0,0,.40)}
+.stats{display:flex;gap:8px;margin-bottom:9px}
+.stat{flex:1;padding:9px;text-align:center;border-radius:15px;background:rgba(255,255,255,.055)}
+.statTitle{font-size:12px;color:#8d9aaa;margin-bottom:3px}
+.statValue{font-size:16px;font-weight:900;color:white}
+.instruction{min-height:59px;display:flex;align-items:center;padding:11px 14px;border-radius:17px;background:linear-gradient(135deg,rgba(0,137,255,.20),rgba(0,210,255,.07));border:1px solid rgba(0,175,255,.18);font-size:17px;font-weight:900;line-height:1.6;color:#fff}
+.locationText{width:100%;margin-top:8px;height:45px;display:flex;align-items:center;justify-content:center;border-radius:15px;background:rgba(255,255,255,.065);color:#dce5ee;font-size:14px;font-weight:bold}
+.leaflet-control-zoom{margin-top:155px!important;border:0!important}
+.leaflet-control-zoom a{background:#081525!important;color:white!important;border:0!important}
+.leaflet-control-attribution{font-size:8px;background:rgba(0,0,0,.35)!important;color:#aaa!important}
+.hazardMarker{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;background:rgba(7,16,29,.96);border:2px solid rgba(255,255,255,.85);box-shadow:0 4px 15px rgba(0,0,0,.45)}
+.hazardPopup{font-size:14px;font-weight:bold;text-align:center;direction:rtl}
+@media(max-width:500px){.logo{font-size:17px}.instruction{font-size:16px}.myLocation{bottom:252px}}
 </style>
-
 </head>
-
 <body>
 
-<div id="pullRefresh" class="pullRefresh">
-🔄
-</div>
-
 <div class="topbar">
-
-<div class="logo">
-
-<div class="logoIcon">
-🧭
-</div>
-
-XOSHNAW MAP
-
-</div>
-
-<button
-class="refresh"
-onclick="refreshPage()">
-
-🔄
-
-</button>
-
+  <div class="logo"><div class="logoIcon">🧭</div>XOSHNAW MAP</div>
+  <button class="refresh" onclick="refreshPage()">🔄</button>
 </div>
 
 <div class="searchBox">
-
-<input
-id="searchInput"
-class="searchInput"
-placeholder="شوێنێک بگەڕێ..."
-autocomplete="off">
-
-<button
-class="searchBtn"
-onclick="searchPlace()">
-
-🔍
-
-</button>
-
+  <input id="searchInput" class="searchInput" placeholder="شوێنێک بگەڕێ..." autocomplete="off">
+  <button class="searchBtn" onclick="searchPlace()">🔍</button>
 </div>
 
 <div id="map"></div>
 
-<button
-class="myLocation"
-onclick="locateMe()">
-
-📍
-
-</button>
+<button class="myLocation" onclick="locateMe()">📍</button>
 
 <div class="navCard">
-
-<div class="stats">
-
-<div class="stat">
-
-<div class="statTitle">
-📍 دووری
+  <div class="stats">
+    <div class="stat"><div class="statTitle">📍 دووری</div><div id="distance" class="statValue">-</div></div>
+    <div class="stat"><div class="statTitle">⏱️ کاتی گەیشتن</div><div id="eta" class="statValue">-</div></div>
+  </div>
+  <div id="instruction" class="instruction">🧭 شوێنێک بگەڕێ بۆ دەستپێکردنی ڕێگا</div>
+  <div class="locationText">📡 GPS بەردەوام شوێنی تۆ نوێ دەکاتەوە</div>
 </div>
 
-<div
-id="distance"
-class="statValue">
-
--
-
-</div>
-
-</div>
-
-<div class="stat">
-
-<div class="statTitle">
-⏱️ کاتی گەیشتن
-</div>
-
-<div
-id="eta"
-class="statValue">
-
--
-
-</div>
-
-</div>
-
-</div>
-
-<div
-id="instruction"
-class="instruction">
-
-🧭 شوێنێک بگەڕێ بۆ دەستپێکردنی ڕێگا
-
-</div>
-
-<div class="locationText">
-
-📡 GPS بەردەوام شوێنی تۆ نوێ دەکاتەوە
-
-</div>
-
-</div>
-
-<script
-src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-</script>
-
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+const map=L.map("map",{zoomControl:true}).setView([36.1911,44.0092],12);
 
-/* =========================
-MAP
-========================= */
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
+  maxZoom:19,
+  attribution:"© OpenStreetMap"
+}).addTo(map);
 
-const map =
-L.map("map",{
-zoomControl:true
-}).setView(
-[36.1911,44.0092],
-12
-);
-
-
-/* OPENSTREETMAP */
-
-L.tileLayer(
-"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-{
-maxZoom:19,
-attribution:"© OpenStreetMap"
-}
-).addTo(map);
-
-
-/* =========================
-VARIABLES
-========================= */
-
-let userLat=null;
-let userLng=null;
-
-let userMarker=null;
-
-let destinationMarker=null;
-
-let routeLine=null;
-
-let routeSteps=[];
-
-let currentStep=0;
-
-let lastVoiceStep=-1;
-
-let destinationLat=null;
-let destinationLng=null;
-
-let arrived=false;
-
-let voiceUnlocked=false;
-
-
-/* =========================
-HAZARDS
-========================= */
-
-let hazardMarkers=[];
-
-let hazards=[];
-
-let routeCoordinates=[];
-
-
-/* =========================
-AUDIO
-========================= */
+let userLat=null,userLng=null,userMarker=null,destinationMarker=null,routeLine=null;
+let routeSteps=[],currentStep=0,lastVoiceStep=-1,destinationLat=null,destinationLng=null;
+let arrived=false,voiceUnlocked=false,hazardMarkers=[],hazards=[],routeCoordinates=[];
 
 const voices={
-
-right:new Audio("right.mp3"),
-
-left:new Audio("left.mp3"),
-
-straight:new Audio("straight.mp3"),
-
-start:new Audio("start.mp3"),
-
-arrived:new Audio("arrived.mp3")
-
+  right:new Audio("right.mp3"),
+  left:new Audio("left.mp3"),
+  straight:new Audio("straight.mp3"),
+  start:new Audio("start.mp3"),
+  arrived:new Audio("arrived.mp3")
 };
 
-
-Object.values(voices)
-.forEach(audio=>{
-
-audio.preload="auto";
-
-});
-
-
-/* =========================
-UNLOCK AUDIO
-========================= */
+Object.values(voices).forEach(a=>a.preload="auto");
 
 function unlockAudio(){
-
-if(voiceUnlocked)
-return;
-
-voiceUnlocked=true;
-
-Object.values(voices)
-.forEach(audio=>{
-
-audio.muted=true;
-
-const p=audio.play();
-
-if(p){
-
-p.then(()=>{
-
-audio.pause();
-
-audio.currentTime=0;
-
-audio.muted=false;
-
-}).catch(()=>{
-
-audio.muted=false;
-
-});
-
+  if(voiceUnlocked)return;
+  voiceUnlocked=true;
+  Object.values(voices).forEach(audio=>{
+    audio.muted=true;
+    const p=audio.play();
+    if(p)p.then(()=>{audio.pause();audio.currentTime=0;audio.muted=false})
+      .catch(()=>{audio.muted=false});
+  });
 }
-
-});
-
-}
-
-
-/* FIRST TOUCH */
-
-document.addEventListener(
-"pointerdown",
-unlockAudio,
-{
-once:true
-}
-);
-
-
-/* PLAY */
+document.addEventListener("pointerdown",unlockAudio,{once:true});
 
 function playVoice(name){
-
-const audio=voices[name];
-
-if(!audio)
-return;
-
-Object.values(voices)
-.forEach(a=>{
-
-try{
-
-a.pause();
-
-a.currentTime=0;
-
-}catch(e){}
-
-});
-
-audio.currentTime=0;
-
-audio.play()
-.catch(error=>{
-
-console.log(
-"Audio blocked:",
-error
-);
-
-});
-
+  const audio=voices[name];
+  if(!audio)return;
+  Object.values(voices).forEach(a=>{try{a.pause();a.currentTime=0}catch(e){}});
+  audio.currentTime=0;
+  audio.play().catch(e=>console.log("Audio blocked:",e));
 }
 
+function refreshPage(){location.reload()}
 
-/* REFRESH */
-
-function refreshPage(){
-
-location.reload();
-
+function distanceMeters(lat1,lon1,lat2,lon2){
+  const R=6371000,p1=lat1*Math.PI/180,p2=lat2*Math.PI/180;
+  const dLat=(lat2-lat1)*Math.PI/180,dLon=(lon2-lon1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
-
-/* =========================
-DISTANCE
-========================= */
-
-function distanceMeters(
-lat1,
-lon1,
-lat2,
-lon2
-){
-
-const R=6371000;
-
-const p1=
-lat1*Math.PI/180;
-
-const p2=
-lat2*Math.PI/180;
-
-const dLat=
-(lat2-lat1)*
-Math.PI/180;
-
-const dLon=
-(lon2-lon1)*
-Math.PI/180;
-
-const a=
-Math.sin(dLat/2)*
-Math.sin(dLat/2)+
-
-Math.cos(p1)*
-Math.cos(p2)*
-
-Math.sin(dLon/2)*
-Math.sin(dLon/2);
-
-const c=
-2*
-Math.atan2(
-Math.sqrt(a),
-Math.sqrt(1-a)
-);
-
-return R*c;
-
+function distanceToRoute(lat,lng){
+  if(!routeCoordinates.length)return Infinity;
+  let min=Infinity;
+  for(const p of routeCoordinates){
+    const d=distanceMeters(lat,lng,p[1],p[0]);
+    if(d<min)min=d;
+  }
+  return min;
 }
-
-
-/* =========================
-DISTANCE TO ROUTE
-========================= */
-
-function distanceToRoute(
-lat,
-lng
-){
-
-if(!routeCoordinates.length)
-return Infinity;
-
-let min=Infinity;
-
-for(
-let i=0;
-i<routeCoordinates.length;
-i++
-){
-
-const point=
-routeCoordinates[i];
-
-const d=
-distanceMeters(
-lat,
-lng,
-point[1],
-point[0]
-);
-
-if(d<min)
-min=d;
-
-}
-
-return min;
-
-}
-
-
-/* =========================
-CLEAR HAZARDS
-========================= */
 
 function clearHazards(){
-
-hazardMarkers.forEach(marker=>{
-
-map.removeLayer(marker);
-
-});
-
-hazardMarkers=[];
-
-hazards=[];
-
+  hazardMarkers.forEach(m=>map.removeLayer(m));
+  hazardMarkers=[];hazards=[];
 }
 
-
-/* =========================
-HAZARD ICON
-========================= */
-
-function createHazardIcon(
-emoji
-){
-
-return L.divIcon({
-
-className:"",
-
-html:
-`<div class="hazardMarker">
-${emoji}
-</div>`,
-
-iconSize:[38,38],
-
-iconAnchor:[19,19],
-
-popupAnchor:[0,-20]
-
-});
-
+function createHazardIcon(emoji){
+  return L.divIcon({
+    className:"",
+    html:`<div class="hazardMarker">${emoji}</div>`,
+    iconSize:[38,38],iconAnchor:[19,19],popupAnchor:[0,-20]
+  });
 }
-
-
-/* =========================
-LOAD HAZARDS
-========================= */
 
 async function loadRouteHazards(){
+  clearHazards();
+  if(!routeCoordinates.length)return;
 
-clearHazards();
+  let minLat=Infinity,maxLat=-Infinity,minLng=Infinity,maxLng=-Infinity;
+  routeCoordinates.forEach(p=>{
+    const lng=p[0],lat=p[1];
+    minLat=Math.min(minLat,lat);maxLat=Math.max(maxLat,lat);
+    minLng=Math.min(minLng,lng);maxLng=Math.max(maxLng,lng);
+  });
 
-if(!routeCoordinates.length)
-return;
+  const padding=0.005;
+  minLat-=padding;maxLat+=padding;minLng-=padding;maxLng+=padding;
 
-
-/*
-GET ROUTE BOUNDING BOX
-*/
-
-let minLat=Infinity;
-let maxLat=-Infinity;
-let minLng=Infinity;
-let maxLng=-Infinity;
-
-routeCoordinates.forEach(point=>{
-
-const lng=point[0];
-const lat=point[1];
-
-if(lat<minLat) minLat=lat;
-if(lat>maxLat) maxLat=lat;
-
-if(lng<minLng) minLng=lng;
-if(lng>maxLng) maxLng=lng;
-
-});
-
-
-/*
-ADD EXTRA SPACE
-*/
-
-const padding=0.005;
-
-minLat-=padding;
-maxLat+=padding;
-minLng-=padding;
-maxLng+=padding;
-
-
-/*
-OVERPASS QUERY
-
-speed cameras:
-highway=speed_camera
-
-speed bumps:
-traffic_calming=bump
-traffic_calming=hump
-traffic_calming=table
-traffic_calming=mini_bumps
-*/
-
-const query=`
-
+  const query=`
 [out:json][timeout:25];
-
 (
-
-node["highway"="speed_camera"]
-(${minLat},${minLng},${maxLat},${maxLng});
-
-way["highway"="speed_camera"]
-(${minLat},${minLng},${maxLat},${maxLng});
-
-node["traffic_calming"~"^(bump|hump|table|mini_bumps)$"]
-(${minLat},${minLng},${maxLat},${maxLng});
-
-way["traffic_calming"~"^(bump|hump|table|mini_bumps)$"]
-(${minLat},${minLng},${maxLat},${maxLng});
-
+ node["highway"="speed_camera"](${minLat},${minLng},${maxLat},${maxLng});
+ way["highway"="speed_camera"](${minLat},${minLng},${maxLat},${maxLng});
+ node["traffic_calming"~"^(bump|hump|table|mini_bumps)$"](${minLat},${minLng},${maxLat},${maxLng});
+ way["traffic_calming"~"^(bump|hump|table|mini_bumps)$"](${minLat},${minLng},${maxLat},${maxLng});
 );
+out center;`;
 
-out center;
-`;
+  try{
+    const response=await fetch("https://overpass-api.de/api/interpreter",{method:"POST",body:query});
+    if(!response.ok)return;
+    const data=await response.json();
+    if(!data.elements)return;
 
+    data.elements.forEach(element=>{
+      let lat=null,lng=null;
+      if(element.type==="node"){lat=element.lat;lng=element.lon}
+      else if(element.center){lat=element.center.lat;lng=element.center.lon}
+      if(lat===null||lng===null)return;
 
-try{
+      if(distanceToRoute(lat,lng)>50)return;
 
-const response=
-await fetch(
-"https://overpass-api.de/api/interpreter",
-{
-method:"POST",
-body:query
+      const type=element.tags&&element.tags.highway==="speed_camera"?"camera":"bump";
+      hazards.push({lat,lng,type,announced:false});
+
+      const marker=L.marker([lat,lng],{
+        icon:createHazardIcon(type==="camera"?"📸":"🚧"),
+        zIndexOffset:1000
+      }).addTo(map);
+
+      marker.bindPopup(`<div class="hazardPopup">${type==="camera"?"📸 کامێرای خێرایی":"🚧 تاسەی ڕێگا"}</div>`);
+      hazardMarkers.push(marker);
+    });
+  }catch(error){console.log("Overpass error:",error)}
 }
-);
-
-
-if(!response.ok){
-
-console.log(
-"Overpass error:",
-response.status
-);
-
-return;
-
-}
-
-
-const data=
-await response.json();
-
-
-if(!data.elements)
-return;
-
-
-data.elements.forEach(element=>{
-
-let lat=null;
-let lng=null;
-
-
-/* NODE */
-
-if(
-element.type==="node"
-){
-
-lat=element.lat;
-lng=element.lon;
-
-}
-
-
-/* WAY */
-
-else if(
-element.center
-){
-
-lat=element.center.lat;
-lng=element.center.lon;
-
-}
-
-
-if(
-lat===null ||
-lng===null
-)
-return;
-
-
-/*
-ONLY SHOW OBJECTS
-NEAR THE ACTUAL ROUTE
-*/
-
-const routeDistance=
-distanceToRoute(
-lat,
-lng
-);
-
-
-/*
-50 METERS FROM ROUTE
-*/
-
-if(routeDistance>50)
-return;
-
-
-let type="";
-
-
-if(
-element.tags &&
-element.tags.highway==="speed_camera"
-){
-
-type="camera";
-
-}else{
-
-type="bump";
-
-}
-
-
-hazards.push({
-
-lat:lat,
-lng:lng,
-type:type,
-announced:false
-
-});
-
-
-/*
-MAP ICON
-*/
-
-const icon=
-type==="camera"
-?
-createHazardIcon("📸")
-:
-createHazardIcon("🚧");
-
-
-const marker=
-L.marker(
-[lat,lng],
-{
-icon:icon,
-zIndexOffset:1000
-}
-)
-.addTo(map);
-
-
-if(type==="camera"){
-
-marker.bindPopup(
-`<div class="hazardPopup">
-📸 کامێرای خێرایی
-</div>`
-);
-
-}else{
-
-marker.bindPopup(
-`<div class="hazardPopup">
-🚧 تاسەی ڕێگا
-</div>`
-);
-
-}
-
-
-hazardMarkers.push(marker);
-
-});
-
-
-console.log(
-"Found hazards:",
-hazards.length
-);
-
-
-}catch(error){
-
-console.log(
-"Overpass error:",
-error
-);
-
-}
-
-}
-
-
-/* =========================
-CHECK HAZARDS
-========================= */
 
 function checkHazards(){
-
-if(
-!hazards.length ||
-userLat===null ||
-userLng===null
-)
-return;
-
-
-hazards.forEach(
-hazard=>{
-
-const d=
-distanceMeters(
-userLat,
-userLng,
-hazard.lat,
-hazard.lng
-);
-
-
-/*
-JUST SHOW THE MARKER.
-
-NO AUDIO.
-*/
-
-if(d<30){
-
-if(hazard.type==="camera"){
-
-document
-.getElementById("instruction")
-.innerText=
-"📸 لە نزیک کامێرای خێرایی";
-
-}else{
-
-document
-.getElementById("instruction")
-.innerText=
-"🚧 لە نزیک تاسەی ڕێگا";
-
+  if(!hazards.length||userLat===null||userLng===null)return;
+  hazards.forEach(h=>{
+    const d=distanceMeters(userLat,userLng,h.lat,h.lng);
+    if(d<30){
+      document.getElementById("instruction").innerText=
+        h.type==="camera"?"📸 لە نزیک کامێرای خێرایی":"🚧 لە نزیک تاسەی ڕێگا";
+    }
+  });
 }
-
-}
-
-});
-
-}
-
-
-/* =========================
-GPS
-========================= */
 
 function locateMe(){
-
-if(!navigator.geolocation){
-
-alert(
-"GPS لەم وێبگەڕەدا بەردەست نییە"
-);
-
-return;
-
+  if(!navigator.geolocation){
+    alert("GPS لەم وێبگەڕەدا بەردەست نییە");return;
+  }
+  navigator.geolocation.getCurrentPosition(position=>{
+    userLat=position.coords.latitude;userLng=position.coords.longitude;
+    updateUserMarker();map.setView([userLat,userLng],16);
+  },error=>{
+    console.log(error);alert("تکایە ڕێگە بە GPS بدە");
+  },{enableHighAccuracy:true,timeout:15000,maximumAge:5000});
 }
-
-
-navigator.geolocation.getCurrentPosition(
-
-position=>{
-
-userLat=
-position.coords.latitude;
-
-userLng=
-position.coords.longitude;
-
-updateUserMarker();
-
-map.setView(
-[userLat,userLng],
-16
-);
-
-},
-
-error=>{
-
-console.log(error);
-
-alert(
-"تکایە ڕێگە بە GPS بدە"
-);
-
-},
-
-{
-
-enableHighAccuracy:true,
-
-timeout:15000,
-
-maximumAge:5000
-
-}
-
-);
-
-}
-
-
-/* =========================
-USER MARKER
-========================= */
 
 function updateUserMarker(){
-
-if(
-userLat===null ||
-userLng===null
-)
-return;
-
-
-if(userMarker){
-
-userMarker.setLatLng(
-[userLat,userLng]
-);
-
-}else{
-
-userMarker=
-L.marker(
-[userLat,userLng]
-)
-.addTo(map)
-.bindPopup(
-"📍 شوێنی تۆ"
-);
-
+  if(userLat===null||userLng===null)return;
+  if(userMarker)userMarker.setLatLng([userLat,userLng]);
+  else userMarker=L.marker([userLat,userLng]).addTo(map).bindPopup("📍 شوێنی تۆ");
 }
-
-}
-
-
-/* =========================
-LIVE GPS
-========================= */
 
 if(navigator.geolocation){
-
-navigator.geolocation.watchPosition(
-
-position=>{
-
-userLat=
-position.coords.latitude;
-
-userLng=
-position.coords.longitude;
-
-updateUserMarker();
-
-
-if(
-destinationLat!==null &&
-destinationLng!==null
-){
-
-navigate();
-
+  navigator.geolocation.watchPosition(position=>{
+    userLat=position.coords.latitude;userLng=position.coords.longitude;
+    updateUserMarker();
+    if(destinationLat!==null&&destinationLng!==null)navigate();
+  },error=>console.log("GPS:",error),{
+    enableHighAccuracy:true,maximumAge:3000,timeout:10000
+  });
 }
-
-},
-
-error=>{
-
-console.log(
-"GPS:",
-error
-);
-
-},
-
-{
-
-enableHighAccuracy:true,
-
-maximumAge:3000,
-
-timeout:10000
-
-}
-
-);
-
-}
-
-
-/* =========================
-SEARCH
-========================= */
 
 async function searchPlace(){
+  unlockAudio();
+  const input=document.getElementById("searchInput").value.trim();
+  if(!input){alert("تکایە ناوی شوێنێک بنووسە");return}
+  document.getElementById("instruction").innerText="🔎 بەدوای شوێنەکەدا دەگەڕێین...";
 
-unlockAudio();
+  try{
+    const url="https://nominatim.openstreetmap.org/search?format=json&q="+encodeURIComponent(input)+"&limit=1";
+    const response=await fetch(url),data=await response.json();
+    if(!data.length){document.getElementById("instruction").innerText="❌ شوێنەکە نەدۆزرایەوە";return}
 
+    destinationLat=parseFloat(data[0].lat);destinationLng=parseFloat(data[0].lon);
+    if(destinationMarker)map.removeLayer(destinationMarker);
+    destinationMarker=L.marker([destinationLat,destinationLng]).addTo(map).bindPopup("🎯 مەبەست").openPopup();
 
-const input=
-document
-.getElementById("searchInput")
-.value
-.trim();
-
-
-if(!input){
-
-alert(
-"تکایە ناوی شوێنێک بنووسە"
-);
-
-return;
-
+    arrived=false;currentStep=0;lastVoiceStep=-1;
+    await createRoute();
+  }catch(error){
+    console.log(error);document.getElementById("instruction").innerText="❌ هەڵەیەک ڕوویدا";
+  }
 }
-
-
-document
-.getElementById("instruction")
-.innerText=
-"🔎 بەدوای شوێنەکەدا دەگەڕێین...";
-
-
-try{
-
-const url=
-"https://nominatim.openstreetmap.org/search"+
-"?format=json"+
-"&q="+
-encodeURIComponent(input)+
-"&limit=1";
-
-
-const response=
-await fetch(url);
-
-
-const data=
-await response.json();
-
-
-if(!data.length){
-
-document
-.getElementById("instruction")
-.innerText=
-"❌ شوێنەکە نەدۆزرایەوە";
-
-return;
-
-}
-
-
-destinationLat=
-parseFloat(data[0].lat);
-
-destinationLng=
-parseFloat(data[0].lon);
-
-
-if(destinationMarker){
-
-map.removeLayer(
-destinationMarker
-);
-
-}
-
-
-destinationMarker=
-L.marker(
-[
-destinationLat,
-destinationLng
-]
-)
-.addTo(map)
-.bindPopup(
-"🎯 مەبەست"
-)
-.openPopup();
-
-
-arrived=false;
-
-currentStep=0;
-
-lastVoiceStep=-1;
-
-
-await createRoute();
-
-
-}catch(error){
-
-console.log(error);
-
-document
-.getElementById("instruction")
-.innerText=
-"❌ هەڵەیەک ڕوویدا";
-
-}
-
-}
-
-
-/* =========================
-CREATE ROUTE
-========================= */
 
 async function createRoute(){
+  if(userLat===null||userLng===null){
+    locateMe();document.getElementById("instruction").innerText="📍 چاوەڕێی GPS ـە...";return;
+  }
 
-if(
-userLat===null ||
-userLng===null
-){
+  const url=`https://router.project-osrm.org/route/v1/driving/${userLng},${userLat};${destinationLng},${destinationLat}?overview=full&geometries=geojson&steps=true`;
 
-locateMe();
+  try{
+    const response=await fetch(url),data=await response.json();
+    if(!data.routes||!data.routes.length){
+      document.getElementById("instruction").innerText="❌ ڕێگا نەدۆزرایەوە";return;
+    }
 
-document
-.getElementById("instruction")
-.innerText=
-"📍 چاوەڕێی GPS ـە...";
+    const route=data.routes[0];
+    if(routeLine)map.removeLayer(routeLine);
 
-return;
+    routeLine=L.geoJSON(route.geometry,{
+      style:{color:"#1597ff",weight:7,opacity:.95,lineCap:"round",lineJoin:"round"}
+    }).addTo(map);
 
+    routeCoordinates=route.geometry.coordinates||[];
+    map.fitBounds(routeLine.getBounds(),{padding:[100,100]});
+
+    document.getElementById("distance").innerText=(route.distance/1000).toFixed(2)+" km";
+    document.getElementById("eta").innerText=Math.max(1,Math.ceil(route.duration/60))+" خولەک";
+
+    routeSteps=route.legs[0].steps||[];
+    currentStep=0;lastVoiceStep=-1;arrived=false;
+
+    document.getElementById("instruction").innerText="🚗 ڕێگاکە دەستی پێکرد";
+    loadRouteHazards();
+
+    setTimeout(()=>playVoice("start"),500);
+  }catch(error){
+    console.log(error);
+    document.getElementById("instruction").innerText="❌ هەڵە لە دروستکردنی ڕێگا";
+  }
 }
-
-
-const url=
-`https://router.project-osrm.org/route/v1/driving/`+
-`${userLng},${userLat};`+
-`${destinationLng},${destinationLat}`+
-`?overview=full&geometries=geojson&steps=true`;
-
-
-try{
-
-const response=
-await fetch(url);
-
-const data=
-await response.json();
-
-
-if(
-!data.routes ||
-!data.routes.length
-){
-
-document
-.getElementById("instruction")
-.innerText=
-"❌ ڕێگا نەدۆزرایەوە";
-
-return;
-
-}
-
-
-const route=
-data.routes[0];
-
-
-if(routeLine){
-
-map.removeLayer(
-routeLine
-);
-
-}
-
-
-/* BLUE ROUTE */
-
-routeLine=
-L.geoJSON(
-route.geometry,
-{
-
-style:{
-
-color:"#1597ff",
-
-weight:7,
-
-opacity:.95,
-
-lineCap:"round",
-
-lineJoin:"round"
-
-}
-
-}
-)
-.addTo(map);
-
-
-/*
-SAVE ROUTE COORDINATES
-FOR HAZARD DETECTION
-*/
-
-routeCoordinates=
-route.geometry.coordinates || [];
-
-
-map.fitBounds(
-routeLine.getBounds(),
-{
-padding:[100,100]
-}
-);
-
-
-/* DISTANCE */
-
-const km=
-route.distance/1000;
-
-
-document
-.getElementById("distance")
-.innerText=
-km.toFixed(2)+" km";
-
-
-/* ETA */
-
-const minutes=
-Math.max(
-1,
-Math.ceil(
-route.duration/60
-)
-);
-
-
-document
-.getElementById("eta")
-.innerText=
-minutes+" خولەک";
-
-
-/* STEPS */
-
-routeSteps=
-route.legs[0].steps || [];
-
-currentStep=0;
-
-lastVoiceStep=-1;
-
-arrived=false;
-
-
-document
-.getElementById("instruction")
-.innerText=
-"🚗 ڕێگاکە دەستی پێکرد";
-
-
-/*
-LOAD SPEED BUMPS
-AND CAMERAS
-*/
-
-loadRouteHazards();
-
-
-/* START VOICE */
-
-setTimeout(()=>{
-
-playVoice("start");
-
-},500);
-
-
-}catch(error){
-
-console.log(error);
-
-document
-.getElementById("instruction")
-.innerText=
-"❌ هەڵە لە دروستکردنی ڕێگا";
-
-}
-
-}
-
-
-/* =========================
-NAVIGATION
-========================= */
 
 function navigate(){
+  if(!routeSteps.length||userLat===null||userLng===null)return;
+  checkHazards();
 
-if(
-!routeSteps.length ||
-userLat===null ||
-userLng===null
-)
-return;
+  const destinationDistance=distanceMeters(userLat,userLng,destinationLat,destinationLng);
+  if(destinationDistance<30){
+    if(!arrived){
+      arrived=true;
+      document.getElementById("distance").innerText="0 m";
+      document.getElementById("eta").innerText="گەیشتیت";
+      document.getElementById("instruction").innerText="🏁 گەیشتیت بە مەبەست";
+      playVoice("arrived");
+    }
+    return;
+  }
 
+  let bestStep=null,bestDistance=Infinity,bestIndex=currentStep;
+  for(let i=currentStep;i<routeSteps.length;i++){
+    const step=routeSteps[i];
+    if(!step.maneuver||!step.maneuver.location)continue;
+    const lng=step.maneuver.location[0],lat=step.maneuver.location[1];
+    const d=distanceMeters(userLat,userLng,lat,lng);
+    if(d<bestDistance){bestDistance=d;bestStep=step;bestIndex=i}
+  }
+  if(!bestStep)return;
 
-/*
-CHECK CAMERAS
-AND SPEED BUMPS
-*/
+  currentStep=bestIndex;
+  document.getElementById("distance").innerText=Math.round(bestDistance)+" m";
 
-checkHazards();
+  const type=bestStep.maneuver.type||"",modifier=bestStep.maneuver.modifier||"";
 
-
-/* ARRIVAL */
-
-const destinationDistance=
-distanceMeters(
-userLat,
-userLng,
-destinationLat,
-destinationLng
-);
-
-
-if(destinationDistance<30){
-
-if(!arrived){
-
-arrived=true;
-
-document
-.getElementById("distance")
-.innerText=
-"0 m";
-
-document
-.getElementById("eta")
-.innerText=
-"گەیشتیت";
-
-document
-.getElementById("instruction")
-.innerText=
-"🏁 گەیشتیت بە مەبەست";
-
-playVoice("arrived");
-
+  if(modifier==="right"||modifier==="sharp right"||modifier==="slight right"){
+    document.getElementById("instruction").innerText="➡️ بە دەستی ڕاست بسوڕێوە";
+    if(bestDistance<=50&&lastVoiceStep!==bestIndex){lastVoiceStep=bestIndex;playVoice("right")}
+  }else if(modifier==="left"||modifier==="sharp left"||modifier==="slight left"){
+    document.getElementById("instruction").innerText="⬅️ بە دەستی چەپ بسوڕێوە";
+    if(bestDistance<=50&&lastVoiceStep!==bestIndex){lastVoiceStep=bestIndex;playVoice("left")}
+  }else if(modifier==="uturn"){
+    document.getElementById("instruction").innerText="🔄 پاشگەز ببەوە";
+  }else if(type==="roundabout"){
+    document.getElementById("instruction").innerText="🔄 بچۆ ناو بازنەکە";
+  }else{
+    document.getElementById("instruction").innerText="⬆️ بە ڕاستەوخۆ بەردەوام بە";
+    if(bestDistance<=50&&lastVoiceStep!==bestIndex){lastVoiceStep=bestIndex;playVoice("straight")}
+  }
 }
 
-return;
-
-}
-
-
-/* FIND STEP */
-
-let bestStep=null;
-
-let bestDistance=Infinity;
-
-let bestIndex=currentStep;
-
-
-for(
-let i=currentStep;
-i<routeSteps.length;
-i++
-){
-
-const step=
-routeSteps[i];
-
-
-if(
-!step.maneuver ||
-!step.maneuver.location
-)
-continue;
-
-
-const lng=
-step.maneuver.location[0];
-
-const lat=
-step.maneuver.location[1];
-
-
-const d=
-distanceMeters(
-userLat,
-userLng,
-lat,
-lng
-);
-
-
-if(d<bestDistance){
-
-bestDistance=d;
-
-bestStep=step;
-
-bestIndex=i;
-
-}
-
-}
-
-
-if(!bestStep)
-return;
-
-
-currentStep=bestIndex;
-
-
-document
-.getElementById("distance")
-.innerText=
-Math.round(bestDistance)+" m";
-
-
-const type=
-bestStep.maneuver.type || "";
-
-const modifier=
-bestStep.maneuver.modifier || "";
-
-
-/* RIGHT */
-
-if(
-modifier==="right" ||
-modifier==="sharp right" ||
-modifier==="slight right"
-){
-
-document
-.getElementById("instruction")
-.innerText=
-"➡️ بە دەستی ڕاست بسوڕێوە";
-
-
-if(
-bestDistance<=50 &&
-lastVoiceStep!==bestIndex
-){
-
-lastVoiceStep=bestIndex;
-
-playVoice("right");
-
-}
-
-}
-
-
-/* LEFT */
-
-else if(
-modifier==="left" ||
-modifier==="sharp left" ||
-modifier==="slight left"
-){
-
-document
-.getElementById("instruction")
-.innerText=
-"⬅️ بە دەستی چەپ بسوڕێوە";
-
-
-if(
-bestDistance<=50 &&
-lastVoiceStep!==bestIndex
-){
-
-lastVoiceStep=bestIndex;
-
-playVoice("left");
-
-}
-
-}
-
-
-/* U TURN */
-
-else if(
-modifier==="uturn"
-){
-
-document
-.getElementById("instruction")
-.innerText=
-"🔄 پاشگەز ببەوە";
-
-}
-
-
-/* ROUNDABOUT */
-
-else if(
-type==="roundabout"
-){
-
-document
-.getElementById("instruction")
-.innerText=
-"🔄 بچۆ ناو بازنەکە";
-
-}
-
-
-/* STRAIGHT */
-
-else{
-
-document
-.getElementById("instruction")
-.innerText=
-"⬆️ بە ڕاستەوخۆ بەردەوام بە";
-
-
-if(
-bestDistance<=50 &&
-lastVoiceStep!==bestIndex
-){
-
-lastVoiceStep=bestIndex;
-
-playVoice("straight");
-
-}
-
-}
-
-}
-
-
-/* =========================
-ENTER SEARCH
-========================= */
-
-document
-.getElementById("searchInput")
-.addEventListener(
-"keydown",
-event=>{
-
-if(event.key==="Enter"){
-
-searchPlace();
-
-}
-
-}
-);
-
-
-/* =========================
-PULL TO REFRESH
-========================= */
-
-let startY=0;
-
-let pulling=false;
-
-
-document.addEventListener(
-"touchstart",
-event=>{
-
-startY=
-event.touches[0].clientY;
-
-pulling=true;
-
-},
-{
-passive:true
-}
-);
-
-
-document.addEventListener(
-"touchmove",
-event=>{
-
-if(!pulling)
-return;
-
-
-const currentY=
-event.touches[0].clientY;
-
-const distance=
-currentY-startY;
-
-
-if(
-distance>20 &&
-distance<150
-){
-
-const refresh=
-document.getElementById(
-"pullRefresh"
-);
-
-refresh.classList.add(
-"show"
-);
-
-
-if(distance>75){
-
-refresh.style.top=
-"25px";
-
-}else{
-
-refresh.style.top=
-"-5px";
-
-}
-
-}
-
-},
-{
-passive:true
-}
-);
-
-
-document.addEventListener(
-"touchend",
-event=>{
-
-if(!pulling)
-return;
-
-
-pulling=false;
-
-
-const currentY=
-event.changedTouches[0].clientY;
-
-const distance=
-currentY-startY;
-
-
-const refresh=
-document.getElementById(
-"pullRefresh"
-);
-
-
-if(distance>75){
-
-refresh.classList.add(
-"show"
-);
-
-refresh.classList.add(
-"spin"
-);
-
-refresh.style.top=
-"20px";
-
-
-setTimeout(()=>{
-
-location.reload();
-
-},600);
-
-
-}else{
-
-refresh.classList.remove(
-"show"
-);
-
-refresh.style.top=
-"-65px";
-
-}
-
-},
-{
-passive:true
-}
-);
-
-
-/* =========================
-START GPS
-========================= */
+document.getElementById("searchInput").addEventListener("keydown",event=>{
+  if(event.key==="Enter")searchPlace();
+});
 
 locateMe();
-
 </script>
-
 </body>
-
 </html>
