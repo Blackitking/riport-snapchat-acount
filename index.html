@@ -2,142 +2,179 @@
 <html lang="ku" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>XOSHNAW MAP</title>
 
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
+
 *{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+box-sizing:border-box;
+margin:0;
+padding:0;
 }
 
 body{
-  font-family:Arial,sans-serif;
-  background:#eef2f5;
-  overflow:hidden;
+font-family:Arial,sans-serif;
+background:#eef2f5;
+overflow:hidden;
 }
 
 #map{
-  width:100%;
-  height:100vh;
+width:100%;
+height:100vh;
 }
 
-/* Search */
+/* SEARCH */
+
 .search-box{
-  position:fixed;
-  top:15px;
-  left:50%;
-  transform:translateX(-50%);
-  width:92%;
-  max-width:500px;
-  z-index:1000;
-  background:white;
-  border-radius:16px;
-  box-shadow:0 4px 20px rgba(0,0,0,.20);
-  display:flex;
-  align-items:center;
-  padding:5px;
+position:fixed;
+top:14px;
+left:50%;
+transform:translateX(-50%);
+width:94%;
+max-width:520px;
+z-index:1000;
+background:white;
+border-radius:17px;
+box-shadow:0 4px 20px rgba(0,0,0,.22);
+display:flex;
+padding:5px;
 }
 
 .search-box input{
-  flex:1;
-  border:0;
-  outline:none;
-  font-size:16px;
-  padding:13px;
-  direction:rtl;
+flex:1;
+border:0;
+outline:none;
+font-size:16px;
+padding:13px;
+direction:rtl;
 }
 
 .search-box button{
-  border:0;
-  background:#1769ff;
-  color:white;
-  border-radius:12px;
-  padding:12px 16px;
-  font-size:16px;
-  cursor:pointer;
+border:0;
+background:#1769ff;
+color:white;
+padding:12px 16px;
+border-radius:13px;
+font-size:15px;
 }
 
-/* Buttons */
+/* CONTROLS */
+
 .controls{
-  position:fixed;
-  left:15px;
-  bottom:100px;
-  z-index:1000;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+position:fixed;
+left:14px;
+bottom:170px;
+z-index:1000;
+display:flex;
+flex-direction:column;
+gap:9px;
 }
 
-.control-btn{
-  width:52px;
-  height:52px;
-  border:0;
-  border-radius:50%;
-  background:white;
-  box-shadow:0 4px 15px rgba(0,0,0,.22);
-  font-size:23px;
-  cursor:pointer;
+.control{
+width:52px;
+height:52px;
+border:0;
+border-radius:50%;
+background:white;
+box-shadow:0 4px 15px rgba(0,0,0,.22);
+font-size:22px;
 }
 
-.control-btn:active{
-  transform:scale(.94);
+/* ROUTE PANEL */
+
+.route-panel{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+z-index:1000;
+background:white;
+border-radius:25px 25px 0 0;
+box-shadow:0 -5px 25px rgba(0,0,0,.2);
+padding:16px;
 }
 
-/* Bottom panel */
-.bottom-panel{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  z-index:1000;
-  background:white;
-  border-radius:24px 24px 0 0;
-  box-shadow:0 -4px 20px rgba(0,0,0,.18);
-  padding:15px 18px 18px;
-}
-
-.brand{
-  text-align:center;
-  font-size:20px;
-  font-weight:bold;
-  color:#1769ff;
-  margin-bottom:10px;
+.title{
+font-size:21px;
+font-weight:bold;
+text-align:center;
+color:#1769ff;
+margin-bottom:8px;
 }
 
 .status{
-  text-align:center;
-  color:#555;
-  font-size:14px;
+text-align:center;
+font-size:14px;
+color:#555;
+margin-bottom:10px;
+}
+
+.info{
+display:flex;
+justify-content:space-around;
+background:#f4f6f8;
+border-radius:15px;
+padding:10px;
+margin-bottom:10px;
+}
+
+.info div{
+text-align:center;
+font-size:13px;
+}
+
+.info strong{
+display:block;
+font-size:17px;
+color:#111;
+margin-top:4px;
 }
 
 .route-btn{
-  width:100%;
-  margin-top:12px;
-  padding:14px;
-  border:0;
-  border-radius:14px;
-  background:#1769ff;
-  color:white;
-  font-size:17px;
-  font-weight:bold;
-  cursor:pointer;
+width:100%;
+border:0;
+background:#1769ff;
+color:white;
+padding:14px;
+border-radius:14px;
+font-size:17px;
+font-weight:bold;
 }
 
-.route-btn:active{
-  transform:scale(.98);
+.voice-btn{
+width:100%;
+border:0;
+background:#222;
+color:white;
+padding:12px;
+border-radius:14px;
+font-size:15px;
+margin-top:8px;
 }
 
-.leaflet-control-attribution{
-  font-size:9px;
+.instruction{
+display:none;
+background:#1769ff;
+color:white;
+border-radius:17px;
+padding:13px;
+margin-bottom:10px;
+text-align:center;
+font-size:17px;
+font-weight:bold;
 }
+
+.instruction .distance{
+font-size:27px;
+display:block;
+margin-bottom:3px;
+}
+
 </style>
 </head>
 
@@ -145,34 +182,88 @@ body{
 
 <div id="map"></div>
 
-<!-- Search -->
+<!-- SEARCH -->
+
 <div class="search-box">
-  <input
-    id="searchInput"
-    type="text"
-    placeholder="گەڕان بۆ شوێن..."
-  >
-  <button onclick="searchPlace()">گەڕان</button>
+
+<input
+id="destination"
+type="text"
+placeholder="ناوی شار یان شوێن بنووسە..."
+>
+
+<button onclick="searchDestination()">
+گەڕان
+</button>
+
 </div>
 
-<!-- Map controls -->
+<!-- BUTTONS -->
+
 <div class="controls">
-  <button class="control-btn" onclick="findMe()">📍</button>
-  <button class="control-btn" onclick="zoomIn()">＋</button>
-  <button class="control-btn" onclick="zoomOut()">−</button>
+
+<button class="control" onclick="locateUser()">
+📍
+</button>
+
+<button class="control" onclick="map.zoomIn()">
+＋
+</button>
+
+<button class="control" onclick="map.zoomOut()">
+−
+</button>
+
 </div>
 
-<!-- Bottom -->
-<div class="bottom-panel">
-  <div class="brand">XOSHNAW MAP</div>
+<!-- PANEL -->
 
-  <div id="status" class="status">
-    دوگمەی 📍 دابگرە بۆ دۆزینەوەی شوێنی تۆ
-  </div>
+<div class="route-panel">
 
-  <button class="route-btn" onclick="findMe()">
-    📍 شوێنی من بدۆزەوە
-  </button>
+<div class="title">
+XOSHNAW MAP
+</div>
+
+<div id="instruction" class="instruction">
+<span id="instructionDistance" class="distance"></span>
+<span id="instructionText"></span>
+</div>
+
+<div id="status" class="status">
+شوێنی مەبەست بنووسە
+</div>
+
+<div class="info">
+
+<div>
+دووری
+<strong id="distance">—</strong>
+</div>
+
+<div>
+کات
+<strong id="duration">—</strong>
+</div>
+
+<div>
+دۆخ
+<strong id="gpsStatus">ئامادە</strong>
+</div>
+
+</div>
+
+<button
+class="route-btn"
+onclick="locateUser()">
+📍 شوێنی من بدۆزەوە
+</button>
+
+<button
+class="voice-btn"
+onclick="testVoice()">
+🔊 تاقیکردنەوەی دەنگ
+</button>
+
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -180,222 +271,923 @@ body{
 <script>
 
 /* =========================
-   Map
+   MAP
 ========================= */
 
-const map = L.map("map").setView([36.1911,44.0092], 13);
-
-/* OpenStreetMap */
+const map = L.map("map").setView(
+[36.1911,44.0092],
+13
+);
 
 L.tileLayer(
-  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  {
-    maxZoom:19,
-    attribution:"© OpenStreetMap contributors"
-  }
+"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+{
+maxZoom:19,
+attribution:"© OpenStreetMap contributors"
+}
 ).addTo(map);
 
 
 /* =========================
-   Variables
+   VARIABLES
 ========================= */
 
 let userMarker = null;
-let accuracyCircle = null;
+let destinationMarker = null;
+let routeLine = null;
+
+let userPosition = null;
+let destinationPosition = null;
+
+let routeSteps = [];
+let lastInstruction = -1;
+
+let tracking = false;
 
 
 /* =========================
-   Find User
+   STATUS
 ========================= */
 
-function findMe(){
-
-  const status = document.getElementById("status");
-
-  if(!navigator.geolocation){
-    status.innerText = "ئەم ئامێرە GPS پشتگیری ناکات.";
-    return;
-  }
-
-  status.innerText = "لە دۆزینەوەی شوێنی تۆدایە...";
-
-  navigator.geolocation.getCurrentPosition(
-
-    function(position){
-
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-      const accuracy = position.coords.accuracy;
-
-      if(userMarker){
-        map.removeLayer(userMarker);
-      }
-
-      if(accuracyCircle){
-        map.removeLayer(accuracyCircle);
-      }
-
-      /* User marker */
-
-      userMarker = L.marker([lat,lng])
-        .addTo(map)
-        .bindPopup("📍 شوێنی تۆ")
-        .openPopup();
-
-      /* Accuracy */
-
-      accuracyCircle = L.circle(
-        [lat,lng],
-        {
-          radius:accuracy,
-          color:"#1769ff",
-          fillColor:"#1769ff",
-          fillOpacity:.15
-        }
-      ).addTo(map);
-
-      map.setView([lat,lng],16);
-
-      status.innerText =
-        "شوێنی تۆ دۆزرایەوە 📍";
-
-    },
-
-    function(error){
-
-      if(error.code === 1){
-        status.innerText =
-          "تکایە مۆڵەتی Location/GPS بدە بە وێبگەکە.";
-      }
-      else if(error.code === 2){
-        status.innerText =
-          "شوێنی GPS بەردەست نییە.";
-      }
-      else{
-        status.innerText =
-          "کێشەیەک لە دۆزینەوەی شوێن ڕوویدا.";
-      }
-
-    },
-
-    {
-      enableHighAccuracy:true,
-      timeout:10000,
-      maximumAge:0
-    }
-
-  );
+function setStatus(text){
+document.getElementById("status").innerText=text;
 }
 
 
 /* =========================
-   Zoom
+   USER LOCATION
 ========================= */
 
-function zoomIn(){
-  map.zoomIn();
+function locateUser(){
+
+if(!navigator.geolocation){
+
+setStatus(
+"ئەم ئامێرە GPS پشتگیری ناکات."
+);
+
+return;
 }
 
-function zoomOut(){
-  map.zoomOut();
+setStatus(
+"لە دۆزینەوەی شوێنی تۆدایە..."
+);
+
+navigator.geolocation.getCurrentPosition(
+
+function(position){
+
+updateUserPosition(position);
+
+startTracking();
+
+},
+
+function(){
+
+setStatus(
+"تکایە مۆڵەتی Location بدە."
+);
+
+},
+
+{
+enableHighAccuracy:true,
+timeout:15000,
+maximumAge:0
+}
+
+);
+
 }
 
 
 /* =========================
-   Search Place
+   UPDATE POSITION
 ========================= */
 
-async function searchPlace(){
+function updateUserPosition(position){
 
-  const input =
-    document.getElementById("searchInput");
+const lat =
+position.coords.latitude;
 
-  const query = input.value.trim();
+const lng =
+position.coords.longitude;
 
-  if(!query){
-    return;
-  }
+userPosition = [lat,lng];
 
-  const status =
-    document.getElementById("status");
+document.getElementById(
+"gpsStatus"
+).innerText="GPS ✓";
 
-  status.innerText =
-    "لە گەڕان بەدوای شوێنەکەدایە...";
 
-  try{
+if(userMarker){
 
-    const url =
-      "https://nominatim.openstreetmap.org/search" +
-      "?format=json" +
-      "&limit=1" +
-      "&q=" +
-      encodeURIComponent(query);
+userMarker.setLatLng(
+[lat,lng]
+);
 
-    const response =
-      await fetch(url,{
-        headers:{
-          "Accept-Language":"ku,en"
-        }
-      });
+}else{
 
-    const data =
-      await response.json();
+userMarker =
+L.marker([lat,lng])
+.addTo(map)
+.bindPopup("📍 شوێنی تۆ");
 
-    if(!data.length){
+}
 
-      status.innerText =
-        "شوێنەکە نەدۆزرایەوە.";
+if(!destinationPosition){
 
-      return;
-    }
+map.setView(
+[lat,lng],
+16
+);
 
-    const place = data[0];
+}
 
-    const lat =
-      parseFloat(place.lat);
+if(destinationPosition){
 
-    const lon =
-      parseFloat(place.lon);
+updateNavigation();
 
-    map.setView([lat,lon],16);
-
-    L.marker([lat,lon])
-      .addTo(map)
-      .bindPopup(
-        "📍 " + place.display_name
-      )
-      .openPopup();
-
-    status.innerText =
-      "شوێنەکە دۆزرایەوە 📍";
-
-  }
-  catch(error){
-
-    status.innerText =
-      "کێشەیەک لە گەڕان ڕوویدا.";
-
-  }
+}
 
 }
 
 
 /* =========================
-   Enter Search
+   LIVE GPS
+========================= */
+
+function startTracking(){
+
+if(tracking) return;
+
+tracking=true;
+
+navigator.geolocation.watchPosition(
+
+function(position){
+
+updateUserPosition(position);
+
+},
+
+function(){
+
+document.getElementById(
+"gpsStatus"
+).innerText="GPS هەڵەیە";
+
+},
+
+{
+enableHighAccuracy:true,
+maximumAge:1000,
+timeout:10000
+}
+
+);
+
+}
+
+
+/* =========================
+   SEARCH DESTINATION
+========================= */
+
+async function searchDestination(){
+
+const input =
+document.getElementById(
+"destination"
+);
+
+const query =
+input.value.trim();
+
+if(!query){
+
+setStatus(
+"تکایە ناوی شار یان شوێن بنووسە."
+);
+
+return;
+}
+
+setStatus(
+"لە گەڕان بەدوای شوێنەکەدایە..."
+);
+
+try{
+
+const url =
+"https://nominatim.openstreetmap.org/search" +
+"?format=json" +
+"&limit=1" +
+"&q=" +
+encodeURIComponent(query);
+
+const response =
+await fetch(
+url,
+{
+headers:{
+"Accept-Language":"ku,en"
+}
+}
+);
+
+const data =
+await response.json();
+
+if(!data.length){
+
+setStatus(
+"شوێنەکە نەدۆزرایەوە."
+);
+
+return;
+}
+
+const place=data[0];
+
+const lat=
+parseFloat(place.lat);
+
+const lng=
+parseFloat(place.lon);
+
+destinationPosition=[
+lat,
+lng
+];
+
+if(destinationMarker){
+
+destinationMarker.setLatLng(
+[lat,lng]
+);
+
+}else{
+
+destinationMarker=
+L.marker([lat,lng])
+.addTo(map)
+.bindPopup(
+"🎯 مەبەست"
+)
+.openPopup();
+
+}
+
+map.setView(
+[lat,lng],
+14
+);
+
+setStatus(
+"مەبەست دۆزرایەوە."
+);
+
+if(!userPosition){
+
+setStatus(
+"ئێستا 📍 شوێنی من بدۆزەوە بۆ دروستکردنی ڕێگا."
+);
+
+return;
+}
+
+await buildRoute();
+
+}
+catch(error){
+
+console.log(error);
+
+setStatus(
+"کێشەیەک لە گەڕان ڕوویدا."
+);
+
+}
+
+}
+
+
+/* =========================
+   BUILD ROUTE
+========================= */
+
+async function buildRoute(){
+
+if(
+!userPosition ||
+!destinationPosition
+){
+return;
+}
+
+setStatus(
+"ڕێگاکە لە هەژمارکردندایە..."
+);
+
+const start =
+userPosition[1]+","+
+userPosition[0];
+
+const end =
+destinationPosition[1]+","+
+destinationPosition[0];
+
+const url =
+"https://router.project-osrm.org/route/v1/driving/" +
+start + ";" + end +
+"?overview=full" +
+"&geometries=geojson" +
+"&steps=true";
+
+try{
+
+const response =
+await fetch(url);
+
+const data =
+await response.json();
+
+if(
+data.code !== "Ok" ||
+!data.routes.length
+){
+
+setStatus(
+"هیچ ڕێگایەک نەدۆزرایەوە."
+);
+
+return;
+}
+
+const route =
+data.routes[0];
+
+
+/* REMOVE OLD ROUTE */
+
+if(routeLine){
+
+map.removeLayer(routeLine);
+
+}
+
+
+/* DRAW ROUTE */
+
+routeLine =
+L.geoJSON(
+route.geometry,
+{
+style:{
+color:"#1769ff",
+weight:7,
+opacity:.85
+}
+}
+).addTo(map);
+
+
+/* FIT */
+
+map.fitBounds(
+routeLine.getBounds(),
+{
+padding:[30,120]
+}
+);
+
+
+/* INFO */
+
+const km =
+route.distance / 1000;
+
+const minutes =
+Math.round(
+route.duration / 60
+);
+
+document.getElementById(
+"distance"
+).innerText =
+km.toFixed(1)+" km";
+
+document.getElementById(
+"duration"
+).innerText =
+minutes+" خولەک";
+
+setStatus(
+"ڕێگا ئامادەیە 🚗"
+);
+
+
+/* STEPS */
+
+routeSteps=[];
+
+for(
+const step of route.legs[0].steps
+){
+
+routeSteps.push({
+
+distance:step.distance,
+
+duration:step.duration,
+
+type:step.maneuver.type,
+
+modifier:step.maneuver.modifier,
+
+location:[
+step.maneuver.location[1],
+step.maneuver.location[0]
+]
+
+});
+
+}
+
+lastInstruction=-1;
+
+updateNavigation();
+
+}
+catch(error){
+
+console.log(error);
+
+setStatus(
+"کێشەیەک لە دروستکردنی ڕێگا ڕوویدا."
+);
+
+}
+
+}
+
+
+/* =========================
+   DISTANCE BETWEEN GPS
+========================= */
+
+function distanceMeters(a,b){
+
+const R=6371000;
+
+const lat1=
+a[0]*Math.PI/180;
+
+const lat2=
+b[0]*Math.PI/180;
+
+const dLat=
+(b[0]-a[0])*
+Math.PI/180;
+
+const dLng=
+(b[1]-a[1])*
+Math.PI/180;
+
+const x=
+Math.sin(dLat/2)*
+Math.sin(dLat/2)+
+Math.cos(lat1)*
+Math.cos(lat2)*
+Math.sin(dLng/2)*
+Math.sin(dLng/2);
+
+return R*
+2*
+Math.atan2(
+Math.sqrt(x),
+Math.sqrt(1-x)
+);
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function updateNavigation(){
+
+if(
+!userPosition ||
+!routeSteps.length
+){
+return;
+}
+
+let nearestIndex=-1;
+
+let nearestDistance=
+Infinity;
+
+
+/* FIND NEXT STEP */
+
+for(
+let i=0;
+i<routeSteps.length;
+i++
+){
+
+const step=
+routeSteps[i];
+
+const d=
+distanceMeters(
+userPosition,
+step.location
+);
+
+if(
+d<nearestDistance
+){
+
+nearestDistance=d;
+nearestIndex=i;
+
+}
+
+}
+
+
+/* CURRENT / NEXT */
+
+let index=nearestIndex;
+
+if(index<0)return;
+
+const step=
+routeSteps[index];
+
+let meters=
+Math.round(
+nearestDistance
+);
+
+if(
+meters<5 &&
+index<routeSteps.length-1
+){
+
+index++;
+
+}
+
+const nextStep=
+routeSteps[index];
+
+meters=
+Math.round(
+distanceMeters(
+userPosition,
+nextStep.location
+)
+);
+
+
+/* ARRIVED */
+
+if(
+index>=routeSteps.length-1 &&
+meters<40
+){
+
+showInstruction(
+"گەیشتیتە مەبەستەکەت 🎯",
+"",
+false
+);
+
+speak(
+"گەیشتیتە مەبەستەکەت"
+);
+
+return;
+
+}
+
+
+/* SPEECH THRESHOLD */
+
+let threshold=50;
+
+if(meters<=threshold){
+
+if(
+lastInstruction!==index
+){
+
+lastInstruction=index;
+
+const text=
+makeInstruction(
+nextStep
+);
+
+showInstruction(
+"لە "+meters+" مەتر",
+text,
+true
+);
+
+speak(
+makeSpeech(
+meters,
+nextStep
+)
+);
+
+}
+
+}else{
+
+showInstruction(
+"ئامادە بە",
+makeInstruction(nextStep),
+true
+);
+
+}
+
+}
+
+
+/* =========================
+   KURDISH INSTRUCTION
+========================= */
+
+function makeInstruction(step){
+
+const type=
+step.type;
+
+const modifier=
+step.modifier || "";
+
+
+if(
+modifier.includes("right")
+){
+
+return "بە دەستی ڕاست بسوڕێوە";
+
+}
+
+if(
+modifier.includes("left")
+){
+
+return "بە دەستی چەپ بسوڕێوە";
+
+}
+
+if(
+type==="uturn"
+){
+
+return "بسوڕێوە و بگەڕێوە";
+
+}
+
+if(
+type==="roundabout"
+){
+
+return "بچۆ ناو گەڕانەوەکە";
+
+}
+
+if(
+type==="arrive"
+){
+
+return "گەیشتیتە مەبەستەکەت";
+
+}
+
+return "بەردەوام بە ڕاستەوخۆ";
+
+}
+
+
+/* =========================
+   SPEECH TEXT
+========================= */
+
+function makeSpeech(
+meters,
+step
+){
+
+let instruction=
+makeInstruction(step);
+
+if(
+instruction.includes("ڕاست")
+){
+
+return (
+meters+
+" مەتری تر، " +
+"بە دەستی ڕاست بسوڕێوە"
+);
+
+}
+
+if(
+instruction.includes("چەپ")
+){
+
+return (
+meters+
+" مەتری تر، " +
+"بە دەستی چەپ بسوڕێوە"
+);
+
+}
+
+return (
+meters+
+" مەتری تر، " +
+instruction
+);
+
+}
+
+
+/* =========================
+   SHOW INSTRUCTION
+========================= */
+
+function showInstruction(
+distance,
+text,
+show
+){
+
+const box=
+document.getElementById(
+"instruction"
+);
+
+if(!show){
+
+box.style.display="block";
+
+document.getElementById(
+"instructionDistance"
+).innerText="🎯";
+
+document.getElementById(
+"instructionText"
+).innerText=text;
+
+return;
+}
+
+box.style.display="block";
+
+document.getElementById(
+"instructionDistance"
+).innerText=
+distance;
+
+document.getElementById(
+"instructionText"
+).innerText=
+text;
+
+}
+
+
+/* =========================
+   KURDISH VOICE
+========================= */
+
+function speak(text){
+
+if(
+typeof speechSynthesis ===
+"undefined"
+){
+
+return;
+}
+
+speechSynthesis.cancel();
+
+const voice=
+new SpeechSynthesisUtterance(
+text
+);
+
+voice.lang="ku";
+
+voice.rate=0.9;
+
+voice.pitch=1;
+
+voice.volume=1;
+
+
+/*
+Try Kurdish voice first,
+then Arabic/English fallback
+*/
+
+const voices=
+speechSynthesis.getVoices();
+
+const kurdish=
+voices.find(
+v =>
+v.lang.toLowerCase()
+.startsWith("ku")
+);
+
+const arabic=
+voices.find(
+v =>
+v.lang.toLowerCase()
+.startsWith("ar")
+);
+
+if(kurdish){
+
+voice.voice=kurdish;
+
+}
+else if(arabic){
+
+voice.voice=arabic;
+
+}
+
+speechSynthesis.speak(
+voice
+);
+
+}
+
+
+/* =========================
+   TEST VOICE
+========================= */
+
+function testVoice(){
+
+speak(
+"پەیامی تاقیکردنەوەی XOSHNAW MAP. پەنجا مەتری تر، بە دەستی ڕاست بسوڕێوە."
+);
+
+}
+
+
+/* =========================
+   ENTER SEARCH
 ========================= */
 
 document
-  .getElementById("searchInput")
-  .addEventListener(
-    "keydown",
-    function(event){
+.getElementById("destination")
+.addEventListener(
+"keydown",
+function(e){
 
-      if(event.key === "Enter"){
-        searchPlace();
-      }
+if(e.key==="Enter"){
 
-    }
-  );
+searchDestination();
+
+}
+
+});
+
+
+/* LOAD VOICES */
+
+if(
+"speechSynthesis" in window
+){
+
+speechSynthesis.onvoiceschanged=
+function(){
+
+speechSynthesis.getVoices();
+
+};
+
+}
 
 </script>
 
