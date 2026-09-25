@@ -147,39 +147,134 @@ function createHazardIcon(emoji){
 
 async function loadMapHazards(){
   clearHazards();
-  const bounds=map.getBounds();
-  const south=bounds.getSouth(), west=bounds.getWest(), north=bounds.getNorth(), east=bounds.getEast();
+
+  let south,west,north,east;
+
+  if(userLat!==null && userLng!==null){
+    south=userLat-0.08;
+    north=userLat+0.08;
+    west=userLng-0.08;
+    east=userLng+0.08;
+  }else{
+    const b=map.getBounds();
+    south=b.getSouth();
+    west=b.getWest();
+    north=b.getNorth();
+    east=b.getEast();
+  }
+
   const query=`
-[out:json][timeout:25];
+[out:json][timeout:40];
 (
  node["highway"="speed_camera"](${south},${west},${north},${east});
  way["highway"="speed_camera"](${south},${west},${north},${east});
  relation["highway"="speed_camera"](${south},${west},${north},${east});
- node["traffic_calming"~"^(bump|hump|table|mini_bumps)$"](${south},${west},${north},${east});
- way["traffic_calming"~"^(bump|hump|table|mini_bumps)$"](${south},${west},${north},${east});
- relation["traffic_calming"~"^(bump|hump|table|mini_bumps)$"](${south},${west},${north},${east});
+
+ node["traffic_calming"](${south},${west},${north},${east});
+ way["traffic_calming"](${south},${west},${north},${east});
+ relation["traffic_calming"](${south},${west},${north},${east});
 );
-out center;`;
-  try{
-    const response=await fetch("https://overpass-api.de/api/interpreter",{method:"POST",body:query});
-    if(!response.ok)return;
-    const data=await response.json();
-    if(!data.elements)return;
-    data.elements.forEach(element=>{
-      let lat=null,lng=null;
-      if(element.type==="node"){lat=element.lat;lng=element.lon}
-      else if(element.center){lat=element.center.lat;lng=element.center.lon}
-      if(lat===null||lng===null)return;
-      const type=element.tags&&element.tags.highway==="speed_camera"?"camera":"bump";
-      if(hazards.some(h=>h.type===type&&distanceMeters(h.lat,h.lng,lat,lng)<8))return;
-      hazards.push({lat,lng,type,announced:false});
-      const marker=L.marker([lat,lng],{icon:createHazardIcon(type==="camera"?"📸":"🚧"),zIndexOffset:10000,pane:"xoshNawHazards",keyboard:false,bubblingMouseEvents:false}).addTo(map);
-      marker.bindPopup(`<div class="hazardPopup">${type==="camera"?"📸 کامێرای خێرایی":"🚧 تاسەی ڕێگا"}</div>`);
-      hazardMarkers.push(marker);
+out center tags;
+`;
+
+  const servers=[
+    "https://overpass-api.de/api/interpreter",
+    "https://overpass.kumi.systems/api/interpreter",
+    "https://overpass.private.coffee/api/interpreter"
+  ];
+
+  let data=null;
+
+  for(const server of servers){
+    try{
+      const response=await fetch(server,{
+        method:"POST",
+        headers:{"Content-Type":"text/plain;charset=UTF-8"},
+        body:query
+      });
+      if(response.ok){
+        data=await response.json();
+        break;
+      }
+    }catch(error){
+      console.log("Overpass failed:",server);
+    }
+  }
+
+  if(!data || !Array.isArray(data.elements)){
+    console.log("No Overpass data");
+    return;
+  }
+
+  data.elements.forEach(element=>{
+    let lat=null,lng=null;
+
+    if(element.type==="node"){
+      lat=Number(element.lat);
+      lng=Number(element.lon);
+    }else if(element.center){
+      lat=Number(element.center.lat);
+      lng=Number(element.center.lon);
+    }
+
+    if(!Number.isFinite(lat)||!Number.isFinite(lng))return;
+
+    const tags=element.tags||{};
+    const calming=String(tags.traffic_calming||"").toLowerCase();
+
+    let type=null;
+
+    if(tags.highway==="speed_camera"){
+      type="camera";
+    }else if([
+      "bump","hump","table","mini_bumps",
+      "cushion","rumble_strip"
+    ].includes(calming)){
+      type="bump";
+    }
+
+    if(!type)return;
+
+    const duplicate=hazards.some(h=>
+      h.type===type &&
+      distanceMeters(h.lat,h.lng,lat,lng)<10
+    );
+
+    if(duplicate)return;
+
+    hazards.push({
+      lat:lat,
+      lng:lng,
+      type:type,
+      announced:false
     });
-    hazardsLoadedForRoute=true;
-    keepHazardsVisible();
-  }catch(error){console.log("Overpass error:",error)}
+
+    const marker=L.marker([lat,lng],{
+      icon:createHazardIcon(type==="camera"?"📸":"🚧"),
+      zIndexOffset:10000,
+      pane:"xoshNawHazards",
+      keyboard:false
+    }).addTo(map);
+
+    marker.bindPopup(
+      `<div class="hazardPopup">${
+        type==="camera"
+          ?"📸 کامێرای خێرایی"
+          :"🚧 تاسەی ڕێگا"
+      }</div>`
+    );
+
+    hazardMarkers.push(marker);
+  });
+
+  hazardsLoadedForRoute=true;
+  keepHazardsVisible();
+
+  console.log(
+    "XOSHNAW MAP:",
+    "camera",hazards.filter(h=>h.type==="camera").length,
+    "bump",hazards.filter(h=>h.type==="bump").length
+  );
 }
 
 function keepHazardsVisible(){
@@ -204,7 +299,9 @@ function locateMe(){
   }
   navigator.geolocation.getCurrentPosition(position=>{
     userLat=position.coords.latitude;userLng=position.coords.longitude;
-    updateUserMarker();map.setView([userLat,userLng],16);
+    updateUserMarker();
+    map.setView([userLat,userLng],16);
+    setTimeout(()=>loadMapHazards(),700);
   },error=>{
     console.log(error);alert("تکایە ڕێگە بە GPS بدە");
   },{enableHighAccuracy:true,timeout:15000,maximumAge:5000});
@@ -216,10 +313,27 @@ function updateUserMarker(){
   else userMarker=L.marker([userLat,userLng]).addTo(map).bindPopup("📍 شوێنی تۆ");
 }
 
+let lastHazardQueryLat=null;
+let lastHazardQueryLng=null;
+
 if(navigator.geolocation){
   navigator.geolocation.watchPosition(position=>{
-    userLat=position.coords.latitude;userLng=position.coords.longitude;
+    userLat=position.coords.latitude;
+    userLng=position.coords.longitude;
     updateUserMarker();
+
+    if(
+      lastHazardQueryLat===null ||
+      distanceMeters(
+        userLat,userLng,
+        lastHazardQueryLat,lastHazardQueryLng
+      )>3000
+    ){
+      lastHazardQueryLat=userLat;
+      lastHazardQueryLng=userLng;
+      loadMapHazards();
+    }
+
     if(destinationLat!==null&&destinationLng!==null)navigate();
   },error=>console.log("GPS:",error),{
     enableHighAccuracy:true,maximumAge:3000,timeout:10000
@@ -338,14 +452,22 @@ document.getElementById("searchInput").addEventListener("keydown",event=>{
   if(event.key==="Enter")searchPlace();
 });
 
-// 🚧 و 📸 هەمیشە لەسەر نەخشەکە دەمێنن، تەنانەت بەبێ destination.
+// 🚧 و 📸 هەمیشە لە نەخشەکە دەردەکەون،
+// تەنانەت ئەگەر هیچ destination ـێک دیاری نەکرابێت.
 let hazardReloadTimer=null;
+
 function refreshVisibleHazards(){
   clearTimeout(hazardReloadTimer);
-  hazardReloadTimer=setTimeout(()=>loadMapHazards(),350);
+  hazardReloadTimer=setTimeout(()=>{
+    loadMapHazards();
+  },900);
 }
-map.on("zoomend moveend", refreshVisibleHazards);
+
+map.on("zoomend",refreshVisibleHazards);
+
+// لە سەرەتادا هەوڵی بارکردن دەدات.
 loadMapHazards();
+
 locateMe();
 </script>
 </body>
